@@ -9,3 +9,4 @@ npm-debug.log
 /packages/*
 !/packages/.gitkeep
 server/server.config.json
+example.png
