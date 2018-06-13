@@ -1,0 +1,14 @@
+{
+  "name": "chrome",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "ck",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "ko-sleep": "^1.0.3",
+    "puppeteer": "^1.5.0"
+  }
+}
