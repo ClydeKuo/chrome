@@ -19,11 +19,26 @@ function randomNum(minNum, maxNum) {
     // Launch chromium using a proxy server on port 9876.
     // More on proxying:
     //    https://www.chromium.org/developers/design-documents/network-settings
-    args: [ '--proxy-server=127.0.0.1:10005' ]
+    args: ["--proxy-server=127.0.0.1:10005"]
   });
-  
+  const newPagePromise = () => {
+    return new Promise(resolve => {
+      browser.once("targetcreated", target => {
+        resolve(target.page());
+      });
+    });
+  };
+  const  screenshot= (page) => {
+    return new Promise(resolve => {
+      page.once("load", () => {
+        resolve(page.screenshot({ path: "example.png", fullPage: true }))
+      });
+    });
+  };
   const page = await browser.newPage();
-  await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36")
+  await page.setUserAgent(
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36"
+  );
   await page.setViewport({ width: 1920, height: 1048 });
   try {
     await page.goto(
@@ -32,26 +47,18 @@ function randomNum(minNum, maxNum) {
       { waitUntil: "networkidle2" }
     );
     // console.log(pages)
-    const newPagePromise = new Promise(resolve =>
-      browser.once("targetcreated", target => {
-        resolve(target.page())})
-    );
     /* browser.once("targetcreated", target => {
       console.log(1)
     }) */
     // await page.mouse.click(100, 1950, { delay: 0 });
     // await sleep("10s");
-    
     await page.click("#iframe4341660_0", { delay: 100 });
-    // await page.mouse.click(300, 1950, { delay: 1000 });
-    // await page.mouse.click(600, 1950, { delay: 50 });
-    console.log("click")
-    const newPage = await newPagePromise;
+    console.log("click");
+    const newPage = await newPagePromise();
     // console.log("targetcreated")
     // await newPage.setViewport({ width: 1920, height: 1048 });
-    await newPage.waitForNavigation();
+    await screenshot(newPage)
     // await sleep("3s");
-    await newPage.screenshot({ path: "example.png", fullPage: true });
   } catch (e) {
     console.log(e);
   }
