@@ -8,6 +8,7 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "chalk": "^2.4.1",
     "ko-sleep": "^1.0.3",
     "puppeteer": "^1.5.0"
   }

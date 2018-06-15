@@ -1,4 +1,5 @@
 const puppeteer = require("puppeteer");
+const chalk=require('chalk')
 const sleep = require("ko-sleep");
 //生成随机数据
 function randomNum(minNum, maxNum) {
@@ -19,20 +20,22 @@ function randomNum(minNum, maxNum) {
     // More on proxying:
     //    https://www.chromium.org/developers/design-documents/network-settings
     //https://peter.sh/experiments/chromium-command-line-switches/
-    args: ["--proxy-server=127.0.0.1:10005",
-  "--user-agent='Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 UBrowser/6.2.3964.2 Safari/537.36'"]
+    args: [
+      "--proxy-server=127.0.0.1:10005",
+      "--user-agent='Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 UBrowser/6.2.3964.2 Safari/537.36'"
+    ]
   });
   const newPagePromise = () => {
     return new Promise(resolve => {
       browser.once("targetcreated", async target => {
         try {
-          console.log(target.url());
+          console.log(target.url().substr(0,100));
           let newPage = await browser.newPage();
           await newPage.setViewport({ width: 1920, height: 1048 });
           await newPage.goto(target.url(), { waitUntil: "networkidle0" });
           resolve(newPage);
         } catch (e) {
-          console.log(e);
+          throw new Error(e);
         }
       });
     });
@@ -71,18 +74,23 @@ function randomNum(minNum, maxNum) {
     });
     console.log(adIdList);
     for (let i = 0; i < adIdList.length; i++) {
-      await baidu.click('[id="' + adIdList[i] + '"] a', { delay: 100 });
-      console.log("进入广告页面");
-      let custom = await newPagePromise();
-      let old = new Date();
-      for (let i = 0; i < 200; i++) {
-        await custom.mouse.move(randomNum(0, 1920), randomNum(0, 1000));
+      try {
+        await baidu.click('[id="' + adIdList[i] + '"] a', { delay: 100 });
+        console.log("进入广告页面");
+        let custom = await newPagePromise();
+        let old = new Date();
+        for (let i = 0; i < 200; i++) {
+          await custom.mouse.move(randomNum(0, 1920), randomNum(0, 1000));
+        }
+        console.log(new Date() - old);
+        await custom.screenshot({ path: `custom${i}.png`, fullPage: true });
+      } catch (e) {
+        console.log(chalk.red(e))
+        continue;
       }
-      console.log(new Date() - old);
-      await custom.screenshot({ path: `custom${i}.png`, fullPage: true });
     }
   } catch (e) {
-    console.log(e);
+    console.log(chalk.red(e))
   }
   await browser.close();
 })();
