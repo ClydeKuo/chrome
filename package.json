@@ -5,7 +5,8 @@
   "author": "ck",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "money":"node money/index.js"
   },
   "dependencies": {
     "chalk": "^2.4.1",

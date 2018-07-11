@@ -52,7 +52,7 @@ const surfing = async (ip,url) => {
     //    https://www.chromium.org/developers/design-documents/network-settings
     //https://peter.sh/experiments/chromium-command-line-switches/
     args: [
-      // `--proxy-server=${ip}`,
+      `--proxy-server=${ip}`,
       `--user-agent=${agent()}`,
       '--no-sandbox',
       '--disable-setuid-sandbox' 
@@ -98,10 +98,12 @@ const surfing = async (ip,url) => {
           }
           await sub[k].close()
         }
+        await customs[i].close()
+        break; 
       }else{
         console.log(i+":"+customs[i].text)
+        await customs[i].close()
       }
-      await customs[i].close()
     }
   } catch (e) {
     console.log(chalk.red(ip));
@@ -109,9 +111,39 @@ const surfing = async (ip,url) => {
   } finally {
     console.log((new Date() - time1) / 1000 + "s");
     await browser.close();
+    init()
   }
 };
+const getIp=async ()=>{
+  let time=5
+  try{
+    let data=await rp({
+      uri: 'http://api.ip.data5u.com/dynamic/get.html?order=3bc5244c8eff09599e9e1b955b4847d3&json=1&sep=5',
+    })
+    let ip= JSON.parse(data).data[0].ip+":"+JSON.parse(data).data[0].port
+    let opt = {
+      proxy: "http://"+ip,
+      method: 'GET',
+      url: "https://www.baidu.com",
+      timeout: 5000
+    }
+    let check=await rp(opt)
+    if(check){
+      console.log(ip+":"+"is find")
+      return ip
+    }else{
+      console.log(ip+":"+"is bad")
+    }
+  }catch(e){
+    console.log(e)
+    console.log(--time)
+    if(time){
+      getIp()
+    }
+  }
+}
 const init = async () => {
-  surfing("159.203.174.2:3128","http://hao.7654.com/?chno=7654dh_160648");
+  let ip=await getIp()
+  surfing(ip,"http://hao.7654.com/?chno=7654dh_160648");
 };
 init();
