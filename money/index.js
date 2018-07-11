@@ -52,7 +52,7 @@ const surfing = async (ip,url) => {
     //    https://www.chromium.org/developers/design-documents/network-settings
     //https://peter.sh/experiments/chromium-command-line-switches/
     args: [
-      // `--proxy-server=${ip}`,
+      `--proxy-server=${ip}`,
       `--user-agent=${agent()}`,
     ],
     // headless: false,
@@ -110,6 +110,6 @@ const surfing = async (ip,url) => {
   }
 };
 const init = async () => {
-  surfing("127.0.0.1:1080","http://hao.7654.com/?chno=7654dh_160648");
+  surfing("159.203.174.2:3128","http://hao.7654.com/?chno=7654dh_160648");
 };
 init();
