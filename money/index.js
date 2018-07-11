@@ -52,8 +52,10 @@ const surfing = async (ip,url) => {
     //    https://www.chromium.org/developers/design-documents/network-settings
     //https://peter.sh/experiments/chromium-command-line-switches/
     args: [
-      `--proxy-server=${ip}`,
+      // `--proxy-server=${ip}`,
       `--user-agent=${agent()}`,
+      '--no-sandbox',
+      '--disable-setuid-sandbox' 
     ],
     // headless: false,
   });
