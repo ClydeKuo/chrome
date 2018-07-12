@@ -37,7 +37,7 @@ const scroll=async page=>{
   try{
     //浏览网页
    let old = new Date();
-   for (let j = 0; j < 200; j++) {
+   for (let j = 0; j < 100; j++) {
      await page.mouse.move(randomNum(0, 1920), randomNum(0, 600));
    }
    await sleep("1s");
@@ -59,7 +59,7 @@ const surfing = async (ip,url) => {
       '--no-sandbox',
       '--disable-setuid-sandbox' 
     ],
-    headless: false,
+    // headless: false,
   });
   const homePage = await browser.newPage();
   await homePage.setViewport({ width: 1920, height: 1048 });
@@ -76,7 +76,7 @@ const surfing = async (ip,url) => {
     console.log("drawn homePage");
     let customs=[]
     for(let i=0;i<10;i++){
-      await homePage.mouse.click(randomNum(500, 1500), randomNum(200, 1000));
+      await homePage.mouse.click(randomNum(500, 1500), randomNum(200, 1000), { delay: 100 });
       customs[i]=await newPagePromise(browser);
       if(!customs[i].timeout){
         await sleep("2s");
@@ -100,8 +100,16 @@ const surfing = async (ip,url) => {
           }
           await sub[k].close()
         }
+        let pageNum=[]  //已经打开的网页
+        customs.forEach(function(item){
+          if(!item.timeout){
+            pageNum.push(item)
+          }
+        })
         await customs[i].close()
-        break; 
+        if(pageNum.length>2||i===9){
+          break; 
+        }
       }else{
         console.log(i+":"+customs[i].text)
         await customs[i].close()
