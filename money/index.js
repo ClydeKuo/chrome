@@ -3,8 +3,9 @@ const rp = require("request-promise-native");
 const fs = require('fs')
 const chalk = require("chalk");
 const sleep = require("ko-sleep");
-const randomNum=require('../random')
 const agent = require('secure-random-user-agent')
+const randomNum=require('../lib/random')
+const getIp=require("../lib/getip")
 
 const newPagePromise = (browser) => {
   return new Promise((resolve, reject) => {
@@ -62,26 +63,26 @@ const surfing = async (ip,url) => {
   const homePage = await browser.newPage();
   await homePage.setViewport({ width: 1920, height: 1048 });
   try {
-    await homePage.goto(url);
+    await homePage.goto(url, { waitUntil: "networkidle0" });
     await scroll(homePage)
     if (!fs.existsSync(`${__dirname}/images/`)) {
       fs.mkdirSync(`${__dirname}/images/`);
     }
     await homePage.screenshot({
-      path: `${__dirname}/images/homePage-${ip.split(":")[0]}.png`,
+      path: `${__dirname}/images/homePage-${ip.split(":")[0]}.${new Date().getTime()}.png`,
       fullPage: true
     });
     console.log("drawn homePage");
     let customs=[]
     for(let i=0;i<10;i++){
-      await sleep("1s");
+      await sleep("2s");
       await homePage.mouse.click(randomNum(500, 1500), randomNum(200, 1000));
       customs[i]=await newPagePromise(browser);
       if(!customs[i].timeout){
         console.log(i)
         await scroll(customs[i])
         await customs[i].screenshot({
-          path: `${__dirname}/images/customs-${i}-${ip.split(":")[0]}.png`,
+          path: `${__dirname}/images/customs-${i}-${ip.split(":")[0]}.${new Date().getTime()}.png`,
           fullPage: true
         });
 
@@ -109,53 +110,24 @@ const surfing = async (ip,url) => {
     console.log(chalk.red(ip));
     console.log(chalk.red(e));
   } finally {
-    console.log((new Date() - time1) / 1000 + "s");
+    console.log(chalk.green((new Date() - time1) / 1000 + "s"));
     await browser.close();
-    init()
   }
 };
-const getIp=async (time=5)=>{
-  let tempIp=""
-  try{
-    let data=await rp({
-      uri: 'http://api.ip.data5u.com/dynamic/get.html?order=3bc5244c8eff09599e9e1b955b4847d3&json=1&sep=5',
-    })
-    if(!JSON.parse(data).success){
-      let e={
-        overdue:true,
-        msg:JSON.parse(data).msg
-      }
-      throw e
-    }
-    let ip= JSON.parse(data).data[0].ip+":"+JSON.parse(data).data[0].port
-    tempIp=ip
-    let opt = {
-      proxy: "http://"+ip,
-      method: 'GET',
-      url: "https://www.baidu.com",
-      timeout: 5000
-    }
-    let check=await rp(opt)
-    if(check){
-      console.log(ip+":"+"is find")
-      return ip
-    }
-  }catch(e){
-    if(time&&tempIp){
-      console.log(`最后第${--time}次请求`)
-      console.log(tempIp+":"+"is find")
-      getIp(time)
-    }else if(e.overdue){
-      throw e.msg
-    }
-  }
-}
 const init = async () => {
   try{
     let ip=await getIp()
-    surfing(ip,"http://hao.7654.com/?chno=7654dh_160648");
+    let urls=["http://hao.7654.com/?chno=7654dh_160648","http://dfttpc.7654.com/?chno=160648"]
+    const promises = urls.map(function (item) {
+      return surfing(ip,item)
+    });
+    await Promise.all(promises)
+    // surfing(ip,"http://hao.7654.com/?chno=7654dh_160648")
   }catch(e){
     console.log(e)
+  }finally{
+   await init()
+  console.log("finish")
   }
 };
 init();
