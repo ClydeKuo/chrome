@@ -114,13 +114,21 @@ const surfing = async (ip,url) => {
     init()
   }
 };
-const getIp=async ()=>{
-  let time=5
+const getIp=async (time=5)=>{
+  let tempIp=""
   try{
     let data=await rp({
       uri: 'http://api.ip.data5u.com/dynamic/get.html?order=3bc5244c8eff09599e9e1b955b4847d3&json=1&sep=5',
     })
+    if(!JSON.parse(data).success){
+      let e={
+        overdue:true,
+        msg:JSON.parse(data).msg
+      }
+      throw e
+    }
     let ip= JSON.parse(data).data[0].ip+":"+JSON.parse(data).data[0].port
+    tempIp=ip
     let opt = {
       proxy: "http://"+ip,
       method: 'GET',
@@ -131,19 +139,23 @@ const getIp=async ()=>{
     if(check){
       console.log(ip+":"+"is find")
       return ip
-    }else{
-      console.log(ip+":"+"is bad")
     }
   }catch(e){
-    console.log(e)
-    console.log(--time)
-    if(time){
-      getIp()
+    if(time&&tempIp){
+      console.log(`最后第${--time}次请求`)
+      console.log(tempIp+":"+"is find")
+      getIp(time)
+    }else if(e.overdue){
+      throw e.msg
     }
   }
 }
 const init = async () => {
-  let ip=await getIp()
-  surfing(ip,"http://hao.7654.com/?chno=7654dh_160648");
+  try{
+    let ip=await getIp()
+    surfing(ip,"http://hao.7654.com/?chno=7654dh_160648");
+  }catch(e){
+    console.log(e)
+  }
 };
 init();
