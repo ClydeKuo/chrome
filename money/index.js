@@ -37,7 +37,7 @@ const scroll=async page=>{
   try{
     //浏览网页
    let old = new Date();
-   for (let j = 0; j < 100; j++) {
+   for (let j = 0; j < 200; j++) {
      await page.mouse.move(randomNum(0, 1920), randomNum(0, 600));
    }
    await sleep("1s");
@@ -47,6 +47,7 @@ const scroll=async page=>{
   }
 }
 const surfing = async (ip,url) => {
+  console.log(chalk.yellow(`start:${url}`));
   let time1=new Date()
   const browser = await puppeteer.launch({
     // More on proxying:
@@ -58,7 +59,7 @@ const surfing = async (ip,url) => {
       '--no-sandbox',
       '--disable-setuid-sandbox' 
     ],
-    // headless: false,
+    headless: false,
   });
   const homePage = await browser.newPage();
   await homePage.setViewport({ width: 1920, height: 1048 });
@@ -75,10 +76,10 @@ const surfing = async (ip,url) => {
     console.log("drawn homePage");
     let customs=[]
     for(let i=0;i<10;i++){
-      await sleep("2s");
       await homePage.mouse.click(randomNum(500, 1500), randomNum(200, 1000));
       customs[i]=await newPagePromise(browser);
       if(!customs[i].timeout){
+        await sleep("2s");
         console.log(i)
         await scroll(customs[i])
         await customs[i].screenshot({
@@ -117,16 +118,16 @@ const surfing = async (ip,url) => {
 const init = async () => {
   try{
     let ip=await getIp()
-    let urls=["http://hao.7654.com/?chno=7654dh_160648","http://dfttpc.7654.com/?chno=160648"]
+    /* let urls=["http://hao.7654.com/?chno=7654dh_160648","http://dfttpc.7654.com/?chno=160648"]
     const promises = urls.map(function (item) {
       return surfing(ip,item)
     });
-    await Promise.all(promises)
-    // surfing(ip,"http://hao.7654.com/?chno=7654dh_160648")
+    await Promise.all(promises) */
+    await surfing(ip,"http://hao.7654.com/?chno=7654dh_160648")
   }catch(e){
     console.log(e)
   }finally{
-    console.log("finish")
+    console.log(`finish:${new Date()}`)
     await init()
   }
 };
