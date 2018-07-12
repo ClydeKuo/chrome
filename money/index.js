@@ -126,8 +126,8 @@ const init = async () => {
   }catch(e){
     console.log(e)
   }finally{
-   await init()
-  console.log("finish")
+    console.log("finish")
+    await init()
   }
 };
 init();
