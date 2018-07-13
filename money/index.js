@@ -137,7 +137,7 @@ const init = async () => {
     console.log(e)
   }finally{
     console.log(`finish:${new Date()}`)
-    await sleep("10s");
+    await sleep("100s");
     await init()
   }
 };
