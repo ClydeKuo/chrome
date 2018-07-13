@@ -37,7 +37,7 @@ const scroll=async page=>{
   try{
     //浏览网页
    let old = new Date();
-   for (let j = 0; j < 100; j++) {
+   for (let j = 0; j < 200; j++) {
      await page.mouse.move(randomNum(0, 1920), randomNum(0, 600));
    }
    await sleep("1s");
@@ -76,6 +76,7 @@ const surfing = async (ip,url) => {
     console.log("drawn homePage");
     let customs=[]
     for(let i=0;i<10;i++){
+      await sleep("1s");
       await homePage.mouse.click(randomNum(500, 1500), randomNum(200, 1000), { delay: 100 });
       customs[i]=await newPagePromise(browser);
       if(!customs[i].timeout){
@@ -136,6 +137,7 @@ const init = async () => {
     console.log(e)
   }finally{
     console.log(`finish:${new Date()}`)
+    await sleep("10s");
     await init()
   }
 };
