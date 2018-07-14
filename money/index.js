@@ -126,18 +126,17 @@ const surfing = async (ip,url) => {
 };
 const init = async () => {
   try{
-    let ip=await getIp()
-    /* let urls=["http://hao.7654.com/?chno=7654dh_160648","http://dfttpc.7654.com/?chno=160648"]
-    const promises = urls.map(function (item) {
-      return surfing(ip,item)
-    });
-    await Promise.all(promises) */
-    await surfing(ip,"http://hao.7654.com/?chno=7654dh_160648")
+    let urls=["http://hao.7654.com/?chno=7654dh_161535","https://yeah.qq.com/s.html?q=225196","http://hao.7654.com/?chno=7654dh_160648","http://dfttpc.7654.com/?chno=160648","https://yeah.qq.com/?q=225196","http://dfttpc.7654.com/?chno=161535"]
+    for(let i=0,len=urls.length;i<len;i++){
+      let ip=await getIp()
+      await surfing(ip,urls[i])
+      // await sleep("10s");
+    }
+    
   }catch(e){
     console.log(e)
   }finally{
     console.log(`finish:${new Date()}`)
-    await sleep("100s");
     await init()
   }
 };
