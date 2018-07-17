@@ -126,7 +126,7 @@ const surfing = async (ip,url) => {
 };
 const init = async () => {
   try{
-    let urls=["http://hao.7654.com/?chno=7654dh_161535","https://yeah.qq.com/s.html?q=225196","http://hao.7654.com/?chno=7654dh_160648","http://dfttpc.7654.com/?chno=160648","https://yeah.qq.com/?q=225196","http://dfttpc.7654.com/?chno=161535"]
+    let urls=["http://hao.7654.com/?chno=7654dh_161535","https://yeah.qq.com/s.html?q=225196","http://hao.7654.com/?chno=7654dh_160648"]
     for(let i=0,len=urls.length;i<len;i++){
       let ip=await getIp()
       await surfing(ip,urls[i])
