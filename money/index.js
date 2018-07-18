@@ -7,6 +7,22 @@ const agent = require('secure-random-user-agent')
 const randomNum=require('../lib/random')
 const getIp=require("../lib/getip")
 
+
+const formatDateTime = function () {  
+  let date=new Date()
+  var y = date.getFullYear();  
+  var m = date.getMonth() + 1;  
+  m = m < 10 ? ('0' + m) : m;  
+  var d = date.getDate();  
+  d = d < 10 ? ('0' + d) : d;  
+  var h = date.getHours();  
+  h=h < 10 ? ('0' + h) : h;  
+  var minute = date.getMinutes();  
+  minute = minute < 10 ? ('0' + minute) : minute;  
+  var second=date.getSeconds();  
+  second=second < 10 ? ('0' + second) : second;  
+  return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second;  
+};  
 const newPagePromise = (browser) => {
   return new Promise((resolve, reject) => {
     //捕获不了弹窗时报错
@@ -17,7 +33,7 @@ const newPagePromise = (browser) => {
       try {
         clearTimeout(t);
         let url=target.url().substr(0, 200)
-        console.log(url)
+        console.log(`${chalk.green(formatDateTime())}:点击了${url}`)
         let newPage = await target.page()
         await newPage.setViewport({ width: 1920, height: 1048 });
         if(url==="about:blank"){
@@ -36,19 +52,19 @@ const newPagePromise = (browser) => {
 const scroll=async page=>{
   try{
     //浏览网页
-   let old = new Date();
+  console.time("scroll") 
    for (let j = 0; j < 200; j++) {
      await page.mouse.move(randomNum(0, 1920), randomNum(0, 600));
    }
    await sleep("1s");
-   console.log((new Date() - old) / 1000 + "s");
+   console.timeEnd('scroll') ;
   }catch(e){
     throw e
   }
 }
 const surfing = async (ip,url) => {
-  console.log(chalk.yellow(`start:${url}`));
-  let time1=new Date()
+  console.log(`${chalk.green(formatDateTime())}:${chalk.yellow(`start:${url}`)}`)
+  console.time("surfing") 
   const browser = await puppeteer.launch({
     // More on proxying:
     //    https://www.chromium.org/developers/design-documents/network-settings
@@ -73,7 +89,7 @@ const surfing = async (ip,url) => {
       path: `${__dirname}/images/homePage-${ip.split(":")[0]}.${new Date().getTime()}.png`,
       fullPage: true
     });
-    console.log("drawn homePage");
+    console.log(`${chalk.green(formatDateTime())}:drawn homePage`)
     let customs=[]
     for(let i=0;i<10;i++){
       await sleep("1s");
@@ -81,7 +97,7 @@ const surfing = async (ip,url) => {
       customs[i]=await newPagePromise(browser);
       if(!customs[i].timeout){
         await sleep("2s");
-        console.log(i)
+        console.log(`${chalk.green(formatDateTime())}:下一个循环${i}`)
         await scroll(customs[i])
         await customs[i].screenshot({
           path: `${__dirname}/images/customs-${i}-${ip.split(":")[0]}.${new Date().getTime()}.png`,
@@ -95,7 +111,7 @@ const surfing = async (ip,url) => {
           sub[k]= await newPagePromise(browser);
           if(!sub[k].timeout){
             await scroll(sub[k])
-            console.log("click custom page")
+            console.log(`${chalk.green(formatDateTime())}:click custom page`)
             await sub[k].close()
             break; 
           }
@@ -117,26 +133,27 @@ const surfing = async (ip,url) => {
       }
     }
   } catch (e) {
-    console.log(chalk.red(ip));
+    console.log(`${chalk.green(formatDateTime())}:${chalk.red(ip)}`)
     console.log(chalk.red(e));
   } finally {
-    console.log(chalk.green((new Date() - time1) / 1000 + "s"));
+    console.timeEnd('surfing') ;
     await browser.close();
   }
 };
 const init = async () => {
   try{
+
     let urls=["http://hao.7654.com/?chno=7654dh_161535","https://yeah.qq.com/s.html?q=225196","http://hao.7654.com/?chno=7654dh_160648"]
     for(let i=0,len=urls.length;i<len;i++){
       let ip=await getIp()
       await surfing(ip,urls[i])
-      // await sleep("10s");
     }
     
   }catch(e){
-    console.log(e)
+    console.log(chalk.green(formatDateTime()))
+    console.log(chalk.red(e))
   }finally{
-    console.log(`finish:${new Date()}`)
+    console.log(chalk.green(`${formatDateTime()}:finish`))
     await init()
   }
 };
