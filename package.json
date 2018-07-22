@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "start": "node index.js",
-    "money":"node money/index.js"
+    "money":"node money/index.js",
+    "union":"node union/index.js"
   },
   "dependencies": {
     "chalk": "^2.4.1",
