@@ -67,21 +67,21 @@ const surfing = async (ip,url) => {
   const homePage = await browser.newPage();
   await homePage.setViewport({ width: 1920, height: 1048 });
   try {
-    await homePage.goto(url, { waitUntil: "networkidle0" });
-    await sleep("10s");
+    await homePage.goto(url,{timeout:60000});
     if (!fs.existsSync(`${__dirname}/images/`)) {
       fs.mkdirSync(`${__dirname}/images/`);
     }
-    await homePage.screenshot({
+    /* await homePage.screenshot({
       path: `${__dirname}/images/homePage-${ip.split(":")[0]}.${new Date().getTime()}.png`,
       fullPage: true
-    });
+    }); */
     console.log(`${chalk.green(formatDateTime())}:drawn homePage`)
     await homePage.mouse.click(50, 300, { delay: 100 });
-    await customs[i].screenshot({
+    await sleep("60s");
+    /* await customs[i].screenshot({
       path: `${__dirname}/images/customs-${ip.split(":")[0]}.${new Date().getTime()}.png`,
       fullPage: true
-    });
+    }); */
   } catch (e) {
     console.log(`${chalk.green(formatDateTime())}:${chalk.red(ip)}`)
     console.log(chalk.red(e));
