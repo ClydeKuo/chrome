@@ -1,4 +1,5 @@
-const puppeteer = require("puppeteer");
+const puppeteer = require('puppeteer-extra')
+puppeteer.use(require('puppeteer-extra-plugin-flash')())
 const rp = require("request-promise-native");
 const fs = require('fs')
 const chalk = require("chalk");
@@ -7,7 +8,7 @@ const agent = require('secure-random-user-agent')
 const randomNum=require('../lib/random')
 const getIp=require("../lib/getip")
 
-
+// https://www.flash.cn/
 const formatDateTime = function () {  
   let date=new Date()
   var y = date.getFullYear();  
@@ -76,8 +77,9 @@ const surfing = async (ip,url) => {
       fullPage: true
     }); */
     console.log(`${chalk.green(formatDateTime())}:drawn homePage`)
+    await sleep("10s");
     await homePage.mouse.click(50, 300, { delay: 100 });
-    await sleep("60s");
+    await sleep("80s");
     /* await customs[i].screenshot({
       path: `${__dirname}/images/customs-${ip.split(":")[0]}.${new Date().getTime()}.png`,
       fullPage: true
