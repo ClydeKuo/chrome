@@ -58,7 +58,7 @@ const surfing = async (ip,url) => {
     //    https://www.chromium.org/developers/design-documents/network-settings
     //https://peter.sh/experiments/chromium-command-line-switches/
     args: [
-      `--proxy-server=${ip}`,
+      // `--proxy-server=${ip}`,
       `--user-agent=${agent()}`,
       '--no-sandbox',
       '--disable-setuid-sandbox' 
@@ -79,7 +79,17 @@ const surfing = async (ip,url) => {
     console.log(`${chalk.green(formatDateTime())}:drawn homePage`)
     await sleep("10s");
     await homePage.mouse.click(50, 300, { delay: 100 });
-    await sleep("80s");
+    await sleep("10s");
+    let pages=await browser.pages()
+    if(pages.length<3){
+      await pages[0].close()
+      await sleep("10s");
+      throw "没有点击"
+    }else{
+      await pages[0].close()
+      await sleep("80s");
+    }
+    
     /* await customs[i].screenshot({
       path: `${__dirname}/images/customs-${ip.split(":")[0]}.${new Date().getTime()}.png`,
       fullPage: true
@@ -95,9 +105,10 @@ const surfing = async (ip,url) => {
 const init = async () => {
   try{
 
-    let urls=["http://www.steel-star.com/"]
+    let urls=["http://www.steel-star.com/","http://www.fkyz114.com/","http://www.591xiaoshuo.com/","http://www.gdchan.com/",""]
     for(let i=0,len=urls.length;i<len;i++){
-      let ip=await getIp()
+      // let ip=await getIp()
+      let ip=""
       await surfing(ip,urls[i])
     }
     
