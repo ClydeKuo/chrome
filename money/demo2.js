@@ -11,7 +11,7 @@ const scroll =require("../lib/scroll.js")
 
 const surfing = async (ip,url) => {
   console.log(`${chalk.green(formatDateTime())}:${chalk.yellow(`start:${url}`)}`)
-  console.time("surfing") 
+  // console.time("surfing") 
   const browser = await puppeteer.launch({
     // More on proxying:
     //    https://www.chromium.org/developers/design-documents/network-settings
@@ -22,7 +22,7 @@ const surfing = async (ip,url) => {
       '--no-sandbox',
       '--disable-setuid-sandbox' 
     ],
-    // headless: false,
+    headless: false,
   });
   const homePage = await browser.newPage();
   await homePage.setViewport({ width: 1920, height: 1048 });
@@ -36,10 +36,17 @@ const surfing = async (ip,url) => {
       fullPage: true
     }); */
     console.log(`${chalk.green(formatDateTime())}:drawn homePage`)
+    let numPage=1
     for(let i=0;i<10;i++){
       await sleep("1s");
       await homePage.mouse.click(randomNum(500, 1500), randomNum(200, 1000), { delay: 100 });
-      if((await browser.pages()).length>3){
+      let tempLen=(await browser.pages()).length
+      if(tempLen>numPage){
+        console.log(`${chalk.green(formatDateTime())}:产生了新页面`)
+        await sleep("5s");
+      }
+      numPage=tempLen
+      if(tempLen.length>3){
         break;
       }
     }
@@ -47,6 +54,7 @@ const surfing = async (ip,url) => {
     if(pages.length<2){
       throw "没有点击事件"
     }else{
+      let status=""
       let simulate = new Promise (async (resolve, reject) => {
         try {
           console.log(`${chalk.green(formatDateTime())}:开始模拟浏览`)
@@ -64,6 +72,7 @@ const surfing = async (ip,url) => {
         }
         await sleep("20s");
         console.log(`${chalk.green(formatDateTime())}:正常模拟了一次导航浏览`)
+        status=1
         resolve()
         } catch (e) {
           console.log(`${chalk.red("应该是超时了")}:${e}`)
@@ -72,7 +81,9 @@ const surfing = async (ip,url) => {
     let timeout=new Promise (async (resolve, reject) => {
       console.log(`${chalk.green(formatDateTime())}:开始5分钟计时`)
       await sleep("400s");
-      console.log(chalk.red(`${chalk.green(formatDateTime())}:5分钟超时,母鸡什么原因停下来的`))
+      if(!status){
+        console.log(chalk.red(`${chalk.green(formatDateTime())}:5分钟超时,母鸡什么原因停下来的`))
+      }
       resolve()
     })
       await Promise.race([simulate,timeout])
@@ -81,19 +92,36 @@ const surfing = async (ip,url) => {
     console.log(`${chalk.green(formatDateTime())}:${chalk.red(ip)}`)
     console.log(chalk.red(e));
   } finally {
-    console.timeEnd('surfing');
+    // console.timeEnd('surfing');
     await browser.close();
   }
 };
+
+const surf=(ip,url)=>{
+  return new Promise (async (resolve, reject) => {
+    try {
+      await surfing(ip,url)
+      resolve()
+    } catch (e) {
+      console.log(e)
+      reject(e)
+    }
+  })
+}
+
 const init = async () => {
   try{
-
-    let urls=["http://hao.7654.com/?chno=7654dh_160648"]
-    for(let i=0,len=urls.length;i<len;i++){
-      let ip=await getIp()
-      await surfing(ip,urls[i])
+    let num=2
+    let urls=["http://hao.7654.com/?chno=7654dh_160648","http://hao.7654.com/?chno=7654dh_161821","http://hao.7654.com/?chno=7654dh_161822","http://hao.7654.com/?chno=7654dh_161820"]
+    for(let i=0,len=urls.length;i<len;i=i+num){
+      let surfs=[]
+      for(let j=0;j<num;j++){
+        await sleep("5s"); 
+        let ip=await getIp()
+        surfs.push(surf(ip,urls[i+j]))
+      }
+      await Promise.all(surfs)
     }
-    
   }catch(e){
     console.log(chalk.green(formatDateTime()))
     console.log(chalk.red(e))
@@ -103,3 +131,5 @@ const init = async () => {
   }
 };
 init();
+
+

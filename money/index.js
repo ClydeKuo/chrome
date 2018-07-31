@@ -142,8 +142,8 @@ const surfing = async (ip,url) => {
 };
 const init = async () => {
   try{
-
-    let urls=["http://hao.7654.com/?chno=7654dh_161535","http://hao.7654.com/?chno=7654dh_161812","http://hao.7654.com/?chno=7654dh_161813","http://hao.7654.com/?chno=7654dh_161815","http://hao.7654.com/?chno=7654dh_161817","http://hao.7654.com/?chno=7654dh_161818","http://hao.7654.com/?chno=7654dh_161819","http://hao.7654.com/?chno=7654dh_161820","http://hao.7654.com/?chno=7654dh_161821","http://hao.7654.com/?chno=7654dh_161822"]
+    //删了两个地址
+    let urls=["http://hao.7654.com/?chno=7654dh_161535","http://hao.7654.com/?chno=7654dh_161812","http://hao.7654.com/?chno=7654dh_161813","http://hao.7654.com/?chno=7654dh_161815","http://hao.7654.com/?chno=7654dh_161817","http://hao.7654.com/?chno=7654dh_161818","http://hao.7654.com/?chno=7654dh_161819",]
     for(let i=0,len=urls.length;i<len;i++){
       let ip=await getIp()
       await surfing(ip,urls[i])
