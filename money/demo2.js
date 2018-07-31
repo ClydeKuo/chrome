@@ -43,7 +43,7 @@ const surfing = async (ip,url) => {
       let tempLen=(await browser.pages()).length
       if(tempLen>numPage){
         console.log(`${chalk.green(formatDateTime())}:产生了新页面`)
-        await sleep("5s");
+        await sleep("10s");
       }
       numPage=tempLen
       if(tempLen.length>3){
@@ -58,7 +58,7 @@ const surfing = async (ip,url) => {
       let simulate = new Promise (async (resolve, reject) => {
         try {
           console.log(`${chalk.green(formatDateTime())}:开始模拟浏览`)
-        await sleep("20s");
+        await sleep("10s");
         console.log(`${chalk.green(formatDateTime())}:共${pages.length}页面`)
         for(let i=0;i<pages.length;i++){
           await scroll(pages[i])
