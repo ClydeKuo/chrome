@@ -47,33 +47,41 @@ const surfing = async (ip,url) => {
     if(pages.length<2){
       throw "没有点击事件"
     }else{
-      await sleep("20s");
-      /* if (!fs.existsSync(`${__dirname}/images/`)) {
-        fs.mkdirSync(`${__dirname}/images/`);
-      } */
-      for(let i=0;i<pages.length;i++){
-        await scroll(pages[i])
-        if([1,3].includes(i)){
-          for(let j=0;j<5;j++){
-            await pages[i].mouse.click(randomNum(500, 1500), randomNum(200, 1000), { delay: 100 });
+      let simulate = new Promise (async (resolve, reject) => {
+        try {
+          console.log(`${chalk.green(formatDateTime())}:开始模拟浏览`)
+        await sleep("20s");
+        console.log(`${chalk.green(formatDateTime())}:共${pages.length}页面`)
+        for(let i=0;i<pages.length;i++){
+          await scroll(pages[i])
+          if([1,3].includes(i)){
+            for(let j=0;j<5;j++){
+              await pages[i].mouse.click(randomNum(500, 1500), randomNum(200, 1000), { delay: 100 });
+            }
           }
+          await pages[i].close()
+          console.log(`${chalk.green(formatDateTime())}:第${i+1}页面浏览完毕，已关闭`)
         }
-        console.log(`${chalk.green(formatDateTime())}:png:${i}`)
-        /* await pages[i].screenshot({
-          path: `${__dirname}/images/page-${ip.split(":")[0]}.${new Date().getTime()}.png`,
-          fullPage: true
-        }); */
-        console.log(`${chalk.green(formatDateTime())}:after png:${i}`)
-        await pages[i].close()
-        console.log(`${chalk.green(formatDateTime())}:close png:${i}`)
-      }
-      await sleep("20s");
+        await sleep("20s");
+        console.log(`${chalk.green(formatDateTime())}:正常模拟了一次导航浏览`)
+        resolve()
+        } catch (e) {
+          console.log(`${chalk.red("应该是超时了")}:${e}`)
+        }
+    } )
+    let timeout=new Promise (async (resolve, reject) => {
+      console.log(`${chalk.green(formatDateTime())}:开始5分钟计时`)
+      await sleep("400s");
+      console.log(chalk.red(`${chalk.green(formatDateTime())}:5分钟超时,母鸡什么原因停下来的`))
+      resolve()
+    })
+      await Promise.race([simulate,timeout])
     }
   } catch (e) {
     console.log(`${chalk.green(formatDateTime())}:${chalk.red(ip)}`)
     console.log(chalk.red(e));
   } finally {
-    console.timeEnd('surfing') ;
+    console.timeEnd('surfing');
     await browser.close();
   }
 };
