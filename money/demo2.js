@@ -22,7 +22,7 @@ const surfing = async (ip,url) => {
       '--no-sandbox',
       '--disable-setuid-sandbox' 
     ],
-    headless: false,
+    // headless: false,
   });
   const homePage = await browser.newPage();
   await homePage.setViewport({ width: 1920, height: 1048 });
@@ -111,8 +111,8 @@ const surf=(ip,url)=>{
 
 const init = async () => {
   try{
-    let num=4
-    let urls=["http://hao.7654.com/?chno=7654dh_160648","http://hao.7654.com/?chno=7654dh_161821","http://hao.7654.com/?chno=7654dh_161822","http://hao.7654.com/?chno=7654dh_161820"]
+    let num=8
+    let urls=["http://hao.7654.com/?chno=7654dh_160648","http://hao.7654.com/?chno=7654dh_161821","http://hao.7654.com/?chno=7654dh_161822","http://hao.7654.com/?chno=7654dh_161820","http://hao.7654.com/?chno=7654dh_161815","http://hao.7654.com/?chno=7654dh_161817","http://hao.7654.com/?chno=7654dh_161818","http://hao.7654.com/?chno=7654dh_161819"]
     for(let i=0,len=urls.length;i<len;i=i+num){
       let surfs=[]
       for(let j=0;j<num;j++){
