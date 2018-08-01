@@ -38,15 +38,15 @@ const surfing = async (ip,url) => {
     console.log(`${chalk.green(formatDateTime())}:drawn homePage`)
     let numPage=1
     for(let i=0;i<10;i++){
+      await homePage.mouse.click(randomNum(500, 1500), randomNum(200, 1000), { delay: randomNum(0, 100) });
       await sleep("1s");
-      await homePage.mouse.click(randomNum(500, 1500), randomNum(200, 1000), { delay: 100 });
       let tempLen=(await browser.pages()).length
       if(tempLen>numPage){
         console.log(`${chalk.green(formatDateTime())}:产生了新页面`)
         await sleep("10s");
       }
       numPage=tempLen
-      if(tempLen.length>3){
+      if(tempLen>3){
         break;
       }
     }
@@ -111,7 +111,7 @@ const surf=(ip,url)=>{
 
 const init = async () => {
   try{
-    let num=2
+    let num=4
     let urls=["http://hao.7654.com/?chno=7654dh_160648","http://hao.7654.com/?chno=7654dh_161821","http://hao.7654.com/?chno=7654dh_161822","http://hao.7654.com/?chno=7654dh_161820"]
     for(let i=0,len=urls.length;i<len;i=i+num){
       let surfs=[]
