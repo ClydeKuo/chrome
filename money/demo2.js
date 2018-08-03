@@ -111,8 +111,8 @@ const surf=(ip,url)=>{
 
 const init = async () => {
   try{
-    let num=8
-    let urls=["http://hao.7654.com/?chno=7654dh_160648","http://hao.7654.com/?chno=7654dh_161821","http://hao.7654.com/?chno=7654dh_161822","http://hao.7654.com/?chno=7654dh_161820","http://hao.7654.com/?chno=7654dh_161815","http://hao.7654.com/?chno=7654dh_161817","http://hao.7654.com/?chno=7654dh_161818","http://hao.7654.com/?chno=7654dh_161819"]
+    let num=11
+    let urls=["http://hao.7654.com/?chno=7654dh_160648","http://hao.7654.com/?chno=7654dh_161821","http://hao.7654.com/?chno=7654dh_161822","http://hao.7654.com/?chno=7654dh_161820","http://hao.7654.com/?chno=7654dh_161815","http://hao.7654.com/?chno=7654dh_161817","http://hao.7654.com/?chno=7654dh_161818","http://hao.7654.com/?chno=7654dh_161819","http://hao.7654.com/?chno=7654dh_161535","http://hao.7654.com/?chno=7654dh_161812","http://hao.7654.com/?chno=7654dh_161813"]
     for(let i=0,len=urls.length;i<len;i=i+num){
       let surfs=[]
       for(let j=0;j<num;j++){
