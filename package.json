@@ -8,11 +8,14 @@
     "start": "node index.js",
     "money": "node money/index.js",
     "demo": "node money/demo2.js",
-    "union": "node union/index.js"
+    "union": "node union/index.js",
+    "demo3": "node exec/index.js",
+    "demo4": "node exec/demo.js"
   },
   "dependencies": {
     "chalk": "^2.4.1",
     "ko-sleep": "^1.0.3",
+    "moment": "^2.22.2",
     "node-schedule": "^1.3.0",
     "promise.timeout": "^0.2.0",
     "puppeteer": "^1.5.0",
@@ -23,6 +26,7 @@
     "request": "^2.87.0",
     "request-promise": "^4.2.2",
     "request-promise-native": "^1.0.5",
+    "robotjs": "^0.5.1",
     "secure-random-user-agent": "^1.0.1"
   }
 }

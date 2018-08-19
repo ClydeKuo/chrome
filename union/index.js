@@ -7,7 +7,7 @@ const sleep = require("ko-sleep");
 const agent = require('secure-random-user-agent')
 const randomNum=require('../lib/random')
 const getIp=require("../lib/getip")
-
+const scroll =require("../lib/scroll.js")
 // https://www.flash.cn/
 const formatDateTime = function () {  
   let date=new Date()
@@ -24,32 +24,6 @@ const formatDateTime = function () {
   second=second < 10 ? ('0' + second) : second;  
   return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second;  
 };  
-const newPagePromise = (browser) => {
-  return new Promise((resolve, reject) => {
-    //捕获不了弹窗时报错
-    let t = setTimeout(() => {
-      browser.newPage();
-    }, 3000);
-    browser.once("targetcreated", async target => {
-      try {
-        clearTimeout(t);
-        let url=target.url().substr(0, 200)
-        console.log(`${chalk.green(formatDateTime())}:点击了${url}`)
-        let newPage = await target.page()
-        await newPage.setViewport({ width: 1920, height: 1048 });
-        if(url==="about:blank"){
-          newPage.timeout=true
-          newPage.text="timeout"
-        }
-        resolve(newPage);
-      } catch (e) {
-        reject(e);
-      } finally {
-        clearTimeout(t);
-      }
-    });
-  });
-};
 const surfing = async (ip,url) => {
   console.log(`${chalk.green(formatDateTime())}:${chalk.yellow(`start:${url}`)}`)
   console.time("surfing") 
@@ -68,7 +42,7 @@ const surfing = async (ip,url) => {
   const homePage = await browser.newPage();
   await homePage.setViewport({ width: 1920, height: 1048 });
   try {
-    await homePage.goto(url,{timeout:60000});
+    await homePage.goto(url,{timeout:60000,waitUntil: "domcontentloaded"});
     if (!fs.existsSync(`${__dirname}/images/`)) {
       fs.mkdirSync(`${__dirname}/images/`);
     }
@@ -83,10 +57,23 @@ const surfing = async (ip,url) => {
     let pages=await browser.pages()
     if(pages.length<3){
       await pages[0].close()
-      await sleep("10s");
       throw "没有点击"
     }else{
-      await pages[0].close()
+      await scroll(pages[2])
+      let numPage=1
+      for(let i=0;i<20;i++){
+        await pages[2].mouse.click(randomNum(0, 500), randomNum(0, 500), { delay: randomNum(0, 100) });
+        await sleep("1s");
+      let tempLen=(await browser.pages()).length
+      if(tempLen>numPage){
+        console.log(`${chalk.green(formatDateTime())}:产生了新页面`)
+        await sleep("10s");
+      }
+      numPage=tempLen
+      /* if(tempLen>3){
+        break;
+      } */
+      }
       await sleep("80s");
     }
     
