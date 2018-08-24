@@ -1,7 +1,20 @@
+/**
+ * @author ck
+ * @email clyde_guo@cloud-hr.com.cn
+ * @create date 2018-08-24 10:07:34
+ * @modify date 2018-08-24 10:07:34
+ * @desc xp3系统，账号：Administrator 密码：1
+ * 需要虚拟机自动登录
+ * 牛B大师改名niub
+ * 脚步做好编译放在桌面
+*/
 var exec = require("child_process").exec;
 var moment=require("moment")
 const fs = require('fs')
+const sleep = require("ko-sleep");
+// vmrun的命令
 const execsync = cmdStr => {
+  console.log(cmdStr)
   return new Promise((resolve, reject) => {
     exec(cmdStr, function(err, stdout, stderr) {
       if (err) {
@@ -13,34 +26,60 @@ const execsync = cmdStr => {
     });
   });
 };
-
+//  检查已有的虚拟机，并且挑出最大的值
+const getMax=dir=>{
+  let arr=[]
+  let files = fs.readdirSync(dir)
+  if(files.length){
+    files.forEach(function (item, index) {
+      let stat = fs.lstatSync(`${dir}${item}`)
+      if (stat.isDirectory() === true) { 
+          let key=item.split("-").pop()-0
+          arr.push(key)
+      }
+    })
+    let max=Math.max(...arr)
+    console.log(`最大的机器号码：${max}`)
+    return max
+  }else{
+    return false
+  }
+  
+}
 const init = async () => {
     try{
         let date=moment().format('MM-DD')
-        if (!fs.existsSync(`E:\\machines/${date}/`)) {
-          fs.mkdirSync(`E:\\machines/${date}/`);
+        let dir=`E:\\machines\\${date}\\`
+        if (!fs.existsSync(dir)) {
+          fs.mkdirSync(dir);
         }
-        for(let i=0;i<1;i++){
-          let cmdStr = `vmrun -T ws  clone  "E:\\machines\\xp3\\xp3.vmx" E:\\machines\\${date}\\${date}-${i}\\${date}-${i}.vmx linked -snapshot=init4  -cloneName=${date}-${i}`;
-          console.log(cmdStr)
+        let max=getMax(dir)
+        for(let i=max+1;i<max+100;i++){
+          console.time("install")
+          let newVM=`${dir}${date}-${i}\\${date}-${i}.vmx`
+          let cmdStr = `vmrun -T ws  clone  "E:\\machines\\xp3\\xp3.vmx" ${newVM} linked -snapshot=init7  -cloneName=${date}-${i}`;
           await execsync(cmdStr);
-          let cmdStr2 = `vmrun -gu Administrator -gp 1 -T ws start "E:\\machines\\${date}\\${date}-${i}\\${date}-${i}.vmx"`;
-          console.log(cmdStr2)
+          let cmdStr2 = `vmrun -T ws start "${newVM}"`;
           await execsync(cmdStr2);
+          await sleep("20s");
+          let cmdStr3=`vmrun  -gu Administrator -gp 1  -T ws runProgramInGuest   "${newVM}" "C:\\Documents and Settings\\Administrator\\桌面\\modify.exe" `
+          await execsync(cmdStr3);
+          await sleep("100s");
+          let cmdStr4=`vmrun  -gu Administrator -gp 1  -T ws runProgramInGuest   "${newVM}" "C:\\Documents and Settings\\Administrator\\桌面\\7654静默包\\7654静默包.exe" `
+          await execsync(cmdStr4);
+          await sleep("20s");
+          let cmdStr5 = `vmrun -T ws stop "${newVM}" soft`;
+          await execsync(cmdStr5);
+          console.timeEnd('install');
         }
-        // let cmdStr2 = `vmrun -T ws stop "E:\\machines\\${date}\\${date}-0\\${date}-1.vmx" soft`;
-        //   await execsync(cmdStr2);
-          /* let cmdStr3 = `vmrun -T ws list`;
-          let data=await execsync(cmdStr3);
-          console.log(data.split("\n")) */
           
           /* let cmdStr3=`vmrun  -gu Administrator -gp 1  -T ws runProgramInGuest   "E:\\machines\\08-23\\08-23-0\\08-23-0.vmx" "C:\\Documents and Settings\\Administrator\\桌面\\modify.exe" `
           // let cmdStr3=`vmrun   -T ws  -gu Administrator -gp 1 start   "E:\\machines\\08-23\\08-23-0\\08-23-0.vmx"`
           console.log(cmdStr3)
           await execsync(cmdStr3); */
 
-
-        /* let arr=['"C:\\Program Files\\xiaoyu\\xiaoyu.exe"','"C:\\Program Files\\快压\\X86\\KuaiZip.exe"','"C:\\Program Files\\Heinote\\Heinote.exe"','"C:\\Documents and Settings\\Administrator\\Application Data\\PhotoViewer\\PhotoViewer.exe"','"C:\\Program Files\\KuGou\\KGMusic\\KuGou.exe"','"C:\\Program Files\\Tencent\\QQBrowser\\qqbrowser.exe" -sc=desktopshortcut -fixlaunch=0','"C:\\Program Files\\IQIYI Video\\LStyle\\5.5.33.3550\\QyClient.exe" desktoprun']
+          
+        /* let arr=['"C:\\Program Files\\KuGou\\KGMusic\\KuGou.exe"','"C:\\Program Files\\IQIYI Video\\LStyle\\5.5.33.3550\\QyClient.exe" desktoprun']
         let cmdStr3=`vmrun  -gu Administrator -gp 1  -T ws runProgramInGuest  "E:\\machines\\08-20\\08-20-0\\08-20-0.vmx" ${arr[5]}`
         console.log(cmdStr3)
         await execsync(cmdStr3); */

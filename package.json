@@ -10,7 +10,7 @@
     "demo": "node money/demo2.js",
     "union": "node union/index.js",
     "demo3": "node exec/index.js",
-    "demo4": "node exec/demo.js"
+    "demo2": "node exec/demo2.js"
   },
   "dependencies": {
     "chalk": "^2.4.1",
@@ -26,7 +26,6 @@
     "request": "^2.87.0",
     "request-promise": "^4.2.2",
     "request-promise-native": "^1.0.5",
-    "robotjs": "^0.5.1",
     "secure-random-user-agent": "^1.0.1"
   }
 }
