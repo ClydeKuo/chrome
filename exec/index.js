@@ -49,7 +49,7 @@ const singleInstall = async item => {
           let start=moment()
           let newVM=`${dir}${item}-${i}\\${item}-${i}.vmx`
           //克隆虚拟机的快照
-          let cmdStr = `vmrun -T ws  clone  "E:\\machines\\xp3\\xp3.vmx" ${newVM} linked -snapshot=init8  -cloneName=${item}-${i}`;
+          let cmdStr = `vmrun -T ws  clone  "E:\\machines\\xp3\\xp3.vmx" ${newVM} linked -snapshot=init18  -cloneName=${item}-${i}`;
           await execsync(cmdStr,item);
           // 启动虚拟机
           let cmdStr2 = `vmrun -T ws start "${newVM}" nogui`;
