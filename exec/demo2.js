@@ -1,7 +1,8 @@
 const fs = require('fs')
+const sleep = require("ko-sleep");
 var moment=require("moment")
 // let date=moment().format('MM-DD')
-let date="08-25"
+/* let date="08-25"
 
 let arr=[]
 let files = fs.readdirSync(`E:\\machines/${date}/`)
@@ -13,4 +14,11 @@ files.forEach(function (item, index) {
         arr.push(key)
     }
 })
-console.log(Math.max(...arr))
+console.log(Math.max(...arr)) */
+
+const s=async ()=>{
+    moment.duration(2, 'seconds');
+    await sleep("2s");
+    moment.duration(2, 'seconds');
+}
+s()
