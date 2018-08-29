@@ -49,18 +49,18 @@ const singleInstall = async item => {
           let start=moment()
           let newVM=`${dir}${item}-${i}\\${item}-${i}.vmx`
           //克隆虚拟机的快照
-          let cmdStr = `vmrun -T ws  clone  "E:\\machines\\xp3\\xp3.vmx" ${newVM} linked -snapshot=init7  -cloneName=${item}-${i}`;
+          let cmdStr = `vmrun -T ws  clone  "E:\\machines\\xp3\\xp3.vmx" ${newVM} linked -snapshot=init8  -cloneName=${item}-${i}`;
           await execsync(cmdStr,item);
           // 启动虚拟机
-          let cmdStr2 = `vmrun -T ws start "${newVM}"`;
+          let cmdStr2 = `vmrun -T ws start "${newVM}" nogui`;
           await execsync(cmdStr2,item);
           await sleep("20s");
           // 牛B修改
           let cmdStr3=`vmrun  -gu Administrator -gp 1  -T ws runProgramInGuest   "${newVM}" "C:\\Documents and Settings\\Administrator\\桌面\\modify.exe" `
           await execsync(cmdStr3,item);
-          await sleep("100s");
+          await sleep("60s");
           // 静默安装软件
-          let cmdStr4=`vmrun  -gu Administrator -gp 1  -T ws runProgramInGuest   "${newVM}" "C:\\Documents and Settings\\Administrator\\桌面\\7654静默包\\7654静默包.exe" `
+          let cmdStr4=`vmrun  -gu Administrator -gp 1  -T ws runProgramInGuest   "${newVM}" "C:\\Documents and Settings\\Administrator\\桌面\\${item}\\7654静默包.exe" `
           await execsync(cmdStr4,item);
           await sleep("20s");
           // 关机
