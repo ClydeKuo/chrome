@@ -6,15 +6,24 @@ const sleep = require("ko-sleep");
 const queryString = require('query-string');
 
 
+let browser =''
+
+const getTargetUrl=url=>{
+    return new Promise(async(resolve,reject)=>{
+        try {
+            let newPage = await browser.newPage()
+            await newPage.goto(url, { waitUntil: "domcontentloaded" });
+            let targetUrl=await newPage.url()
+            console.log(targetUrl)
+            await newPage.close()
+            resolve(targetUrl)
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+
 const surfing = async ip => {
-  const browser = await puppeteer.launch({
-    args: [
-      `--user-agent=${agent()}`,
-      "--no-sandbox",
-      "--disable-setuid-sandbox"
-    ],
-    // headless: false,
-  });
   const baidu = (await browser.pages())[0]
   await baidu.setViewport({ width: 1920, height: 1048 });
   try {
@@ -34,6 +43,9 @@ const surfing = async ip => {
         return $('.result.c-container .t a').toArray().map(item=>item.href)
     });
      console.log(urls.length)
+     await Promise.all(urls.map(item=>{
+        getTargetUrl(item)
+     }))
   } catch (e) {
     console.log(chalk.red(e));
   } finally {
@@ -44,6 +56,15 @@ const init = async () => {
     /* for(var i=0;i<50;i++){
         await surfing();
     } */
+    browser=await puppeteer.launch({
+        args: [
+          `--user-agent=${agent()}`,
+          "--no-sandbox",
+          "--disable-setuid-sandbox"
+        ],
+        // headless: false,
+      });
     await surfing();
+    
 };
 init();
