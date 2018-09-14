@@ -32,9 +32,8 @@ const surfing = async ip => {
   const baidu = (await browser.pages())[0];
   await baidu.setViewport({ width: 1920, height: 1048 });
   try {
-    await baidu.goto("https://www.baidu.com/", {
-      waitUntil: ["networkidle0", "domcontentloaded", "load"]
-    });
+    await baidu.goto("https://www.baidu.com/");
+    await baidu.waitForSelector('input[value="百度一下"][type=submit]')
     await baidu.keyboard.type("爬虫", { delay: 1000 });
     await baidu.click('input[value="百度一下"][type=submit]');
     let url = new URI(await baidu.url());
@@ -43,20 +42,17 @@ const surfing = async ip => {
         url.query["rn"] = 50;
         let newUrl = url.toURI();
         console.log(newUrl);
-        await baidu.goto(newUrl, {
-          waitUntil: ["networkidle0", "domcontentloaded", "load"]
-        });
+        await baidu.goto(newUrl);
+        await baidu.waitForSelector('input[value="百度一下"][type=submit]')
     }
-    
+    //获取页面内其他连接的url
     // let list=await baidu.$$(".result.c-container .t a")
     let urls = await baidu.evaluate(() => {
       return $(".result.c-container .t a")
         .toArray()
         .map(item => item.href);
     });
-    console.log(urls)
     let arr = await Promise.all(urls.map(item => getTargetUrl(item))); //获取连接地址
-    console.log(arr.length);
     let arr1=_.uniqBy(arr, item=>(new URI(item)).host)  //去重
     console.log(arr1)
     console.log(arr1.length)
