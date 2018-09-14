@@ -10,21 +10,6 @@ const _ = require("lodash");
 
 let browser = "";
 
-/* const getTargetUrl = url => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let newPage = await browser.newPage();
-      await newPage.goto(url, { waitUntil: "domcontentloaded" });
-      let targetUrl = await newPage.url();
-      // console.log(targetUrl)
-      await newPage.close();
-      resolve(targetUrl);
-    } catch (error) {
-        console.log(chalk.red(error));
-      resolve("https://www.baidu.com/");
-    }
-  });
-}; */
 const getTargetUrl=url=>new Promise((resolve, reject) => {
         console.log(url)
         request.get(url,{followRedirect:false})
@@ -70,10 +55,6 @@ const surfing = async ip => {
         .map(item => item.href);
     });
     console.log(urls)
-    /* let arr = await Promise.all(urls.map(item => getTargetUrl(item))); //获取连接地址
-    console.log(arr.length);
-    let arr1=_.uniqBy(arr, item=>(new URI(item)).host)  //去重
-    console.log(arr1) */
     let arr = await Promise.all(urls.map(item => getTargetUrl(item))); //获取连接地址
     console.log(arr.length);
     let arr1=_.uniqBy(arr, item=>(new URI(item)).host)  //去重
@@ -86,10 +67,6 @@ const surfing = async ip => {
   }
 };
 const init = async () => {
-    /* let a=_.uniqBy([2.1, 1.2, 2.3], item=>{
-        return item+1
-    });
-    console.log(a) */
   /* for(var i=0;i<50;i++){
         await surfing();
     } */
