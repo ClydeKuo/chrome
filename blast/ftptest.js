@@ -5,6 +5,46 @@ const fs=require("fs")
 const request = require('request-promise');
 const sleep = require("ko-sleep");
 const agent = require("secure-random-user-agent");
+const MongoClient = require('mongodb').MongoClient;
+const DB_CONN_STR = "mongodb://clyde:asdqwe123@list-shard-00-00-si9p2.mongodb.net:27017,list-shard-00-01-si9p2.mongodb.net:27017,list-shard-00-02-si9p2.mongodb.net:27017/ftp?ssl=true&replicaSet=list-shard-0&authSource=admin"
+
+class DB{
+  constructor(){
+    this.db="11"
+    this.oldList=[]
+  }
+  connect(){
+    return new Promise((resolve,reject)=>{
+      MongoClient.connect(DB_CONN_STR, { useNewUrlParser: true } ,(err, db)=> {
+          if(err){
+            console.log(chalk.red(err));
+            reject(err)
+          }else{
+            console.log("连接成功！");
+            this.db=db
+            resolve(db)
+          }
+      })
+    })
+  }
+  findList(){
+    return new Promise((resolve,reject)=>{
+      let ftp=this.db.db('ftp').collection("ftp")
+      ftp.find({}).toArray((err, list)=>{
+        if(err){
+          reject(err)
+        }else{
+          this.oldList=list
+          resolve(list)
+        }
+      });
+    }) 
+  }
+  close(){
+    this.db.close()
+  }
+}
+
 const cp = option => {
   return new Promise((resolve, reject) => {
     let c = new Client();
@@ -87,19 +127,20 @@ const blast=async()=>{
       if(item.success) return item
     })
     console.log(`一共有${finalRes.length}个ftp可以上传`)
-   /*  console.log(`开始校验备案`)
-    let recordListRes=[]
-    for(let i=0,len=finalRes.length;i<len;i++){
-      let tempRes=await checkRecord(finalRes[i])
-      if(tempRes.success) recordListRes.push(tempRes)
-    }
-    console.log(`一共有${recordListRes.length}个备案有效`) */
     let text=finalRes.map(item=>`${item.host},${item.user},${item.password}`).join("\r\n")
     fs.writeFileSync(`${__dirname}/newres.txt`,text);
     console.log("导出文件")
+    return finalRes
   } catch (e) {
     console.log(chalk.red(e));
   }
 }
-// blastOne("www.chedu.org.cn,test,test")
-blast()
+
+(async()=>{
+  let db=new DB()
+  await db.connect()
+  await db.findList()
+  console.log(db.oldList)
+  await blast()
+  db.close()
+})()

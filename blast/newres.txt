@@ -1,6 +1,6 @@
 www.iztl.com,admin,123456
-www.beinonghaili.cn,test,test
 www.chinanww.org,chinanww,chinanww123
+www.yongshengfeng.com,test,123456
 mp.eastlady.cn,test,123456
 www.zxedu.org.cn,zxeduorgcn,zxeduorgcn
 www.iybrb.com,admin,admin
@@ -8,13 +8,14 @@ a.iybrb.com,admin,admin
 www.sdkcjx.net,sdkcjx,sdkcjx123
 www.xxplzx.com,test,test
 www.bj-fyd.com,test,test
-www.hggjl.com,hggjl,hggjl123
 1.202.133.2,admin,123456
+www.xc365.net,test,test
 www.526e.com,526ecom,526ecom
 www.eia-china.com,eia-china.com,eia-china.com
 www.qqershou.com,test,test
 www.taiyong.net,test,test
 www.xyyfxx.cn,admin,admin
+www.8bb8b.com,test,test
 chongqing.xibuxinwen.com,xibuxinwen,xibuxinwen.com
 www.xibuxinwen.com,xibuxinwen,xibuxinwen.com
 www.tklab.cn,tklab,tklab.cn
@@ -30,7 +31,6 @@ www.18qqka.com,test,123456
 www.qq2018.vip,test,123456
 www.xindeyigou.com,xindeyigou,xindeyigou
 www.wallstein.com.cn,admin,admin
-lxszr.com,lxszr,lxszr
 www.zjxbjl.com,test,123456
 www.gongying.net.cn,admin,admin
 www.lzcxj.com,test,test
