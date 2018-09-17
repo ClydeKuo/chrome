@@ -13,7 +13,8 @@
     "demo2": "node exec/demo2.js",
     "blast": "node blast/index.js",
     "blast2": "node blast/index2.js",
-    "baidu": "node blast/baidu.js"
+    "baidu": "node blast/index3.js",
+    "ftptest": "node blast/ftptest.js"
   },
   "dependencies": {
     "chalk": "^2.4.1",
