@@ -10,8 +10,9 @@ const DB_CONN_STR = "mongodb://clyde:asdqwe123@list-shard-00-00-si9p2.mongodb.ne
 
 class DB{
   constructor(){
-    this.db="11"
+    this.db=""
     this.oldList=[]
+    this.collection=""
   }
   connect(){
     return new Promise((resolve,reject)=>{
@@ -22,6 +23,7 @@ class DB{
           }else{
             console.log("连接成功！");
             this.db=db
+            this.collection=db.db('ftp').collection("ftp")
             resolve(db)
           }
       })
@@ -29,8 +31,7 @@ class DB{
   }
   findList(){
     return new Promise((resolve,reject)=>{
-      let ftp=this.db.db('ftp').collection("ftp")
-      ftp.find({}).toArray((err, list)=>{
+      this.collection.find({}).toArray((err, list)=>{
         if(err){
           reject(err)
         }else{
@@ -40,8 +41,25 @@ class DB{
       });
     }) 
   }
+  insert(data){
+    return new Promise((resolve,reject)=>{
+      this.collection.insertMany(data, function(err, res) { 
+        if(err){
+          reject(err)
+        }else{
+          resolve(res)
+        }     
+      });
+    })
+  }
   close(){
-    this.db.close()
+    try {
+      this.db.close()
+      console.log("断开数据库连接")
+    } catch (e) {
+      console.log(chalk.red(e));
+    }
+    
   }
 }
 
@@ -87,7 +105,7 @@ const blastOne=async info=>{
       return data
     }
   }catch(e){
-    console.log(chalk.red(e));
+    console.log(chalk.red(1111111));
   }
 }
 const checkRecord=async info=>{
@@ -127,20 +145,39 @@ const blast=async()=>{
       if(item.success) return item
     })
     console.log(`一共有${finalRes.length}个ftp可以上传`)
-    let text=finalRes.map(item=>`${item.host},${item.user},${item.password}`).join("\r\n")
-    fs.writeFileSync(`${__dirname}/newres.txt`,text);
-    console.log("导出文件")
     return finalRes
   } catch (e) {
     console.log(chalk.red(e));
   }
 }
-
-(async()=>{
+//过滤与之前重复的域名
+const filter=async (newList)=>{
   let db=new DB()
-  await db.connect()
-  await db.findList()
-  console.log(db.oldList)
-  await blast()
-  db.close()
+  try {
+    
+    await db.connect()
+    await db.findList()
+    let oldList= db.oldList.map(item=>item.host)
+    let repeatList=[]
+    let insertList=[]
+    newList.forEach(item=>{
+      oldList.includes(item.host)? repeatList.push(item):insertList.push(item)
+    })
+    console.log(`${repeatList.length}项重复`)
+    console.log(`一共有${insertList.length}项是新的爆破出来的`)
+    let text=insertList.map(item=>`${item.host},${item.user},${item.password}`).join("\r\n")
+    fs.writeFileSync(`${__dirname}/newres.txt`,text);
+    console.log("导出文件")
+    if(insertList.length) await db.insert(insertList)
+    console.log("插入数据")
+    
+  } catch (e) {
+    console.log(chalk.red(e));
+  }finally{
+    db.close()
+  }
+}
+(async()=>{
+  let list =await blast()
+  await filter(list)
 })()
