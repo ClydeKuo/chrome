@@ -1,9 +1,0 @@
-www.qqershou.com,test,test
-www.xyyfxx.cn,admin,admin
-www.xibuxinwen.com,xibuxinwen,xibuxinwen.com
-www.0531computer.com,0531computer,0531computer
-www.ytshebei.com,test,test
-cyds.eyh.cn,test,123456
-www.jsbszx.org.cn,admin,123456
-www.djyz.com.cn,test,123456
-www.18qqka.com,test,123456

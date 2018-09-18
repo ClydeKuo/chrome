@@ -5,6 +5,7 @@ const fs=require("fs")
 const request = require('request-promise');
 const sleep = require("ko-sleep");
 const agent = require("secure-random-user-agent");
+const moment=require("moment")
 const MongoClient = require('mongodb').MongoClient;
 const DB_CONN_STR = "mongodb://clyde:asdqwe123@list-shard-00-00-si9p2.mongodb.net:27017,list-shard-00-01-si9p2.mongodb.net:27017,list-shard-00-02-si9p2.mongodb.net:27017/ftp?ssl=true&replicaSet=list-shard-0&authSource=admin"
 
@@ -131,7 +132,7 @@ const checkRecord=async info=>{
 }
 const blast=async()=>{
   try {
-    let res =fs.readFileSync(`${__dirname}/res.txt`,{encoding :"utf-8"});
+    let res =fs.readFileSync(`${__dirname}/data/res.txt`,{encoding :"utf-8"});
     // 过滤空元素
     let arr=res.split("\r\n").filter(item=>{
       if(item) return item
@@ -154,7 +155,6 @@ const blast=async()=>{
 const filter=async (newList)=>{
   let db=new DB()
   try {
-    
     await db.connect()
     await db.findList()
     let oldList= db.oldList.map(item=>item.host)
@@ -166,7 +166,7 @@ const filter=async (newList)=>{
     console.log(`${repeatList.length}项重复`)
     console.log(`一共有${insertList.length}项是新的爆破出来的`)
     let text=insertList.map(item=>`${item.host},${item.user},${item.password}`).join("\r\n")
-    fs.writeFileSync(`${__dirname}/newres.txt`,text);
+    fs.writeFileSync(`${__dirname}/data/filterdata/${moment().format("MM-DD-HHmmss")}.txt`,text);
     console.log("导出文件")
     if(insertList.length) await db.insert(insertList)
     console.log("插入数据")
