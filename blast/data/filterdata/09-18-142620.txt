@@ -1,4 +1,3 @@
-www.iztl.com,admin,123456
 www.beinonghaili.cn,test,test
 www.chinanww.org,chinanww,chinanww123
 www.yongshengfeng.com,test,123456
