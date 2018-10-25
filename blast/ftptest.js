@@ -1,3 +1,4 @@
+/* 测试ftp账号密码是否可用 */
 const Client = require("ftp");
 const _ = require("lodash");
 const chalk = require("chalk");
