@@ -1,3 +1,4 @@
+/* 根据ip获取域名 */
 const rp = require("request-promise-native");
 const fs = require("fs");
 const cheerio = require('cheerio')
@@ -6,6 +7,9 @@ const chalk = require("chalk");
 const URI = require("uri-parse");
 const _ = require('lodash');
 const ipList=require("./ip.json")
+const parseString = require('xml2js').parseString;
+
+// nmap -iL 0.txt -p 21,22,23,1433,3306,3389,27017  -oX a.xml
 
 const getUrl=async (domain,page=1,getNum=false)=>{
     try{
@@ -54,36 +58,19 @@ const singleDomain=async (domain)=>{
 const init=async ()=>{
     try {
         let list=[]
-        /* let data=fs.readFileSync(`${__dirname}/ftp.txt`).toString();
-        let uriList=data.split("\r\n") */
-        let uriList=[]
-        for(let key in ipList){
-            ipList[key].forEach(item => {
-                for(let i=item.min.split(".")[0];i<=item.max.split(".")[0];i++){
-                    for(let j=item.min.split(".")[1];j<=item.max.split(".")[1];j++){
-                        for(let n=item.min.split(".")[2];n<=item.max.split(".")[2];n++){
-                            for(let m=item.min.split(".")[3];m<=item.max.split(".")[3];m++){
-                                uriList.push(`${i}.${j}.${n}.${m}`)
-                            }
-                        }
-                    }
-                }
-            });
-        }
+        let much=[] //超过40个域名的ip
+        let uriList=fs.readFileSync(`${__dirname}/data/ftp.txt`,{encoding :"utf-8"}).split("\r\n");
         for(let i=0,len=uriList.length;i<len;i++){
-            /* let uri=uriList[i].replace(/webmaster@/, "webmaster")
-            let {host}=new URI(uri) */
-            /* host=uriList[i].split(",")[0]
-            if(host.length>24){
-                console.log(chalk.red(`${host}超过24个字符`));
-                list=list.concat(host)
-                continue
-            } */
+            await sleep("5s");
             let data=await singleDomain(uriList[i])
-            list=list.concat(data)
+            if(data){
+                if(data.length>40) much=much.concat(data)
+                list=list.concat(data)
+            }
         }
         list=_.uniq(list)
-        fs.writeFileSync(`${__dirname}/res.txt`,list.join("\r\n"))
+        fs.writeFileSync(`${__dirname}/data/much.txt`,list.join("\r\n"))
+        fs.writeFileSync(`${__dirname}/data/domain.txt`,list.join("\r\n"))
         console.log(`总共${list.length}条数据`)
     } catch (e) {
         console.log(chalk.red(e));
@@ -93,3 +80,23 @@ const init=async ()=>{
 init()
 
 // console.log(ipList)
+
+// 分数组
+/* 
+let uriList=[]
+for(let key in ipList){
+    ipList[key].forEach(item => {
+        for(let i=item.min.split(".")[0];i<=item.max.split(".")[0];i++){
+            for(let j=item.min.split(".")[1];j<=item.max.split(".")[1];j++){
+                for(let n=item.min.split(".")[2];n<=item.max.split(".")[2];n++){
+                    uriList.push(`${i}.${j}.${n}.0/24`)
+                }
+            }
+        }
+    });
+}
+let arr4=_.chunk(uriList, 1000);
+arr4.forEach((item,index)=>{
+    fs.writeFileSync(`${__dirname}/ip/${index}.txt`,item.join("\r\n"))
+}) */
+

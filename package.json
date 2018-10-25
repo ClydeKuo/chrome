@@ -16,7 +16,8 @@
     "baidu": "node blast/index3.js",
     "ftptest": "node blast/ftptest.js",
     "sameip": "node sameip/index.js",
-    "uniq": "node sameip/uniq.js"
+    "uniq": "node sameip/uniq.js",
+    "format": "node sameip/format.js"
   },
   "dependencies": {
     "chalk": "^2.4.1",
@@ -38,6 +39,7 @@
     "request-promise-native": "^1.0.5",
     "secure-random-user-agent": "^1.0.1",
     "spine-ftp": "^1.0.11",
-    "uri-parse": "^0.0.2"
+    "uri-parse": "^0.0.2",
+    "xml2js": "^0.4.19"
   }
 }
