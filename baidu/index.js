@@ -18,8 +18,8 @@ const surfing = async (ip,url) => {
     args: [
       // `--proxy-server=${ip}`,
       `--user-agent=${agent()}`,
-      '--no-sandbox',
-      '--disable-setuid-sandbox' 
+      // '--no-sandbox',
+      // '--disable-setuid-sandbox' 
     ],
     // headless: false,
   });
