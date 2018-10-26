@@ -40,8 +40,9 @@ const init = async () => {
       for(let i=0;i>=0;i++){
         // let ip=await getIp()
         let ip=""
-        await surfing(ip,"http://www.eia-china.com/")
-        await sleep("5s")
+        await surfing(ip,"http://www.eia-china.com/cpm.html")
+        await surfing(ip,"http://www.eia-china.com/cpd.html")
+        await surfing(ip,"http://www.eia-china.com/content.html")
       }
   }catch(e){
     console.log(chalk.red(e))
