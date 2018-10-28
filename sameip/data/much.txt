@@ -1,10 +1,6 @@
-nanshanint.com
-ekp.yango.com.cn
-archives.yango.com.cn
-winwin.yango.com.cn
-hrplus.yango.com.cn
-oa.yango.com.cn
-mail.inductotherm.com.cn
-oadev.bestwaycorp.com
-bestway-shanghai.com
-www.bestway-shanghai.com
+61.172.235.135
+61.172.240.52
+61.172.243.211
+61.172.243.212
+61.172.243.213
+61.172.243.218
