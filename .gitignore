@@ -10,4 +10,5 @@ npm-debug.log
 !/packages/.gitkeep
 server/server.config.json
 lib/list.json
+sameip/source/
 *.png
