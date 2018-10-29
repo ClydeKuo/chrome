@@ -64,16 +64,18 @@ const init=async ()=>{
             await sleep("5s");
             let data=await singleDomain(uriList[i])
             if(data){
-                if(data.length>40){
-                    console.log("-------------------------------------------------------")
-                    console.log(uriList[i])
-                    much=much.concat(uriList[i])
-                } 
+                if(data.length>30){
+					console.log("----------------------------------")
+					much.push(uriList[i])
+					console.log(uriList[i])
+					console.log("----------------------------------")
+				} 
                 list=list.concat(data)
             }
         }
+		console.log(much)
         list=_.uniq(list)
-        fs.writeFileSync(`${__dirname}/data/much.txt`,list.join("\r\n"))
+        fs.writeFileSync(`${__dirname}/data/much.txt`,much.join("\r\n"))
         fs.writeFileSync(`${__dirname}/data/domain.txt`,list.join("\r\n"))
         console.log(`总共${list.length}条数据`)
     } catch (e) {
