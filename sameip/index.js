@@ -8,9 +8,10 @@ const URI = require("uri-parse");
 const _ = require('lodash');
 const ipList=require("./ip.json")
 const parseString = require('xml2js').parseString;
-
+const platform=require('os').platform();
+console.log(platform)
 // nmap -iL 0.txt -p 21,22,23,1433,3306,3389,27017  -oX a.xml
-
+const splitStr=platform==="win32"?"\r\n":"\n"
 const getUrl=async (domain,page=1,getNum=false)=>{
     try{
         let basicsUrl="https://dns.aizhan.com/"
@@ -49,7 +50,6 @@ const singleDomain=async (domain)=>{
             list=list.concat(data)
         }
         console.log(`共${list.length}条数据`)
-        // console.log(list.join("\r\n"))
         return list
     } catch (e) {
         console.log(chalk.red(e));
@@ -60,7 +60,7 @@ const init=async ()=>{
     try {
         let list=[]
         let much=[] //超过40个域名的ip
-        let uriList=fs.readFileSync(`${__dirname}/data/ftp.txt`,{encoding :"utf-8"}).split("\r\n");
+        let uriList=fs.readFileSync(`${__dirname}/data/ftp.txt`,{encoding :"utf-8"}).split(splitStr);
         for(let i=0,len=uriList.length;i<len;i++){
             await sleep("5s");
             let data=await singleDomain(uriList[i])
@@ -77,9 +77,9 @@ const init=async ()=>{
 		console.log(much)
         list=_.uniq(list)
         // much=_.uniq(much)
-        much=_.uniq(much.concat(s.readFileSync(`${__dirname}/data/much.txt`).toString().split("\r\n")))
-        fs.writeFileSync(`${__dirname}/data/much.txt`,much.join("\r\n"))
-        fs.writeFileSync(`${__dirname}/data/domain.txt`,list.join("\r\n"))
+        much=_.uniq(much.concat(s.readFileSync(`${__dirname}/data/much.txt`).toString().split(splitStr)))
+        fs.writeFileSync(`${__dirname}/data/much.txt`,much.join(splitStr))
+        fs.writeFileSync(`${__dirname}/data/domain.txt`,list.join(splitStr))
         console.log(`总共${list.length}条数据`)
     } catch (e) {
         console.log(chalk.red(e));
@@ -106,6 +106,6 @@ for(let key in ipList){
 }
 let arr4=_.chunk(uriList, 1000);
 arr4.forEach((item,index)=>{
-    fs.writeFileSync(`${__dirname}/ip/${index}.txt`,item.join("\r\n"))
+    fs.writeFileSync(`${__dirname}/ip/${index}.txt`,item.join(splitStr))
 }) */
 
