@@ -38,10 +38,11 @@ const getUrl=async (domain,page=1,getNum=false)=>{
 
 const singleDomain=async (domain)=>{
     try {
+        let list=[]
         console.log(`开始扫${domain}`)
         let num=await getUrl(domain,1,true)
         console.log(`共${num}页`)
-        let list=[]
+        if(!num) return list
         for(let i=0;i<num;i++){
             await sleep("1s");
             let data=await getUrl(domain,i+1)
@@ -75,6 +76,8 @@ const init=async ()=>{
         }
 		console.log(much)
         list=_.uniq(list)
+        // much=_.uniq(much)
+        much=_.uniq(much.concat(s.readFileSync(`${__dirname}/data/much.txt`).toString().split("\r\n")))
         fs.writeFileSync(`${__dirname}/data/much.txt`,much.join("\r\n"))
         fs.writeFileSync(`${__dirname}/data/domain.txt`,list.join("\r\n"))
         console.log(`总共${list.length}条数据`)

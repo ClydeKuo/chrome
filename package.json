@@ -13,7 +13,7 @@
     "ftptest": "node blast/ftptest.js",
     "sameip": "node sameip/index.js",
     "uniq": "node sameip/uniq.js",
-    "format": "node sameip/format.js",
+    "format": "node --max_old_space_size=4096 sameip/format.js",
     "baidu": "node baidu/index.js"
   },
   "dependencies": {
