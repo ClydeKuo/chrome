@@ -64,7 +64,11 @@ const init=async ()=>{
             await sleep("5s");
             let data=await singleDomain(uriList[i])
             if(data){
-                if(data.length>40) much=much.concat(data)
+                if(data.length>40){
+                    console.log("-------------------------------------------------------")
+                    console.log(uriList[i])
+                    much=much.concat(uriList[i])
+                } 
                 list=list.concat(data)
             }
         }
