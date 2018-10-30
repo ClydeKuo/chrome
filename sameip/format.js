@@ -26,7 +26,7 @@ const format=()=>{
                         let data=await db.select({addr:temp.addr})
                         if(!data.length){
                             await db.insert([temp])
-                            // await sleep("1s")
+                            await sleep("1s")
                         }
                     } catch (e) {
                         console.log(chalk.red(e));
