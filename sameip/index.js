@@ -4,10 +4,10 @@ const fs = require("fs");
 const cheerio = require('cheerio')
 const sleep = require("ko-sleep");
 const chalk = require("chalk");
-const URI = require("uri-parse");
 const _ = require('lodash');
-const ipList=require("./ip.json")
-const parseString = require('xml2js').parseString;
+const DB=require("./db")
+
+let db = new DB();
 const platform=require('os').platform();
 console.log(platform)
 // nmap -iL 0.txt -p 21,22,23,1433,3306,3389,27017  -oX a.xml
@@ -58,54 +58,26 @@ const singleDomain=async (domain)=>{
 
 const init=async ()=>{
     try {
+        let date="2018-10-31"
+        await db.connect();
         let list=[]
-        let much=[] //超过40个域名的ip
-        let uriList=fs.readFileSync(`${__dirname}/data/ftp.txt`,{encoding :"utf-8"}).split(splitStr);
+        let uriList=(await db.select({ftp:true,date:date})).map(item=>item.addr)
         for(let i=0,len=uriList.length;i<len;i++){
             await sleep("5s");
             let data=await singleDomain(uriList[i])
             if(data){
-                if(data.length>30){
-					console.log("----------------------------------")
-					much.push(uriList[i])
-					console.log(uriList[i])
-					console.log("----------------------------------")
-				} 
+                if(data.length>30) await db.collection.updateOne({addr:uriList[i]},{$set:{'much':true}})
                 list=list.concat(data)
             }
         }
-		console.log(much)
         list=_.uniq(list)
-        // much=_.uniq(much)
-        much=_.uniq(much.concat(s.readFileSync(`${__dirname}/data/much.txt`).toString().split(splitStr)))
-        fs.writeFileSync(`${__dirname}/data/much.txt`,much.join(splitStr))
-        fs.writeFileSync(`${__dirname}/data/domain.txt`,list.join(splitStr))
+        fs.writeFileSync(`${__dirname}/data/domain-${date}.txt`,list.join(splitStr))
         console.log(`总共${list.length}条数据`)
+        db.close()
     } catch (e) {
         console.log(chalk.red(e));
+        db.close()
     }
 }
 // singleDomain("www.junyongshipin2012.com")
 init()
-
-// console.log(ipList)
-
-// 分数组
-/* 
-let uriList=[]
-for(let key in ipList){
-    ipList[key].forEach(item => {
-        for(let i=item.min.split(".")[0];i<=item.max.split(".")[0];i++){
-            for(let j=item.min.split(".")[1];j<=item.max.split(".")[1];j++){
-                for(let n=item.min.split(".")[2];n<=item.max.split(".")[2];n++){
-                    uriList.push(`${i}.${j}.${n}.0/24`)
-                }
-            }
-        }
-    });
-}
-let arr4=_.chunk(uriList, 1000);
-arr4.forEach((item,index)=>{
-    fs.writeFileSync(`${__dirname}/ip/${index}.txt`,item.join(splitStr))
-}) */
-
