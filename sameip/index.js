@@ -60,19 +60,18 @@ const init=async ()=>{
     try {
         let date="2018-10-31"
         await db.connect();
-        let list=[]
-        let uriList=(await db.select({ftp:true,date:date})).map(item=>item.addr)
+        let uriList=(await db.select({ftp:true,dnumber:{$exists:false},date:date})).map(item=>item.addr)
         for(let i=0,len=uriList.length;i<len;i++){
-            await sleep("5s");
             let data=await singleDomain(uriList[i])
             if(data){
-                if(data.length>30) await db.collection.updateOne({addr:uriList[i]},{$set:{'much':true}})
-                list=list.concat(data)
+                if(data.length){
+                    await db.update({addr:uriList[i]},{$set: { domains: data,dnumber:data.length }})
+                }else{
+                    await db.update({addr:uriList[i]},{$set: {dnumber:data.length }})
+                }
             }
+            await sleep("5s");
         }
-        list=_.uniq(list)
-        fs.writeFileSync(`${__dirname}/data/domain-${date}.txt`,list.join(splitStr))
-        console.log(`总共${list.length}条数据`)
         db.close()
     } catch (e) {
         console.log(chalk.red(e));

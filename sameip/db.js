@@ -38,6 +38,13 @@ class DB{
       });
     })
   }
+  update(query,data){
+    return new Promise((resolve,reject)=>{
+      this.collection.updateMany(query,data, function(err, res) { 
+        err?reject(err):resolve(res)     
+      });
+    })
+  }
   close(){
     try {
       this.db.close()

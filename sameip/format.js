@@ -20,7 +20,7 @@ const parseString = file => {
 const format = async () => {
   try {
     let fileArr = fs.readdirSync(`${__dirname}/source/`);
-	let arr = ["ftp", "ssh", "telnet", "http", "mssql", "mysql", "rdp", "mongo"];
+    let arr = ["ftp", "ssh", "telnet", "http", "mssql", "mysql", "rdp", "mongo"];
     let arr3 = [];
     for (let i = 0, len = fileArr.length; i < len; i++) {
       let file = fileArr[i];
@@ -48,8 +48,19 @@ const format = async () => {
             arr2.push(temp);
           }
         }
-		console.log(arr2.length);
-		if(arr2.length) await db.insert(arr2);
+        //过滤重复的ip
+        let ipList=arr2.map(item=>{
+          let res={ addr: item.addr }
+          return res
+        })
+        let repeatArr = (await db.select({$or: ipList})).map(item=>item.addr);
+        let insertArr=arr2.filter(item=>{
+          if(!repeatArr.includes(item.addr)){
+            return item
+          }
+        })
+        console.log(chalk.green(`总共有${arr2.length}条数据,${repeatArr.length}重复,插入${insertArr.length}条数据`));
+        if (insertArr.length) await db.insert(insertArr);
       }
     }
   } catch (e) {
