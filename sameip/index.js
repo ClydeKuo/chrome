@@ -70,7 +70,7 @@ const init=async ()=>{
                     await db.update({addr:uriList[i]},{$set: {dnumber:data.length }})
                 }
             }
-            await sleep("5s");
+            await sleep("1s");
         }
         db.close()
     } catch (e) {
