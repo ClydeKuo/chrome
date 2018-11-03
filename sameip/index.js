@@ -58,9 +58,10 @@ const singleDomain=async (domain)=>{
 
 const init=async ()=>{
     try {
-        let date="2018-10-31"
+        let date="2018-11-02"
         await db.connect();
         let uriList=(await db.select({ftp:true,dnumber:{$exists:false},date:date})).map(item=>item.addr)
+        console.log(uriList.length)
         for(let i=0,len=uriList.length;i<len;i++){
             let data=await singleDomain(uriList[i])
             if(data){
@@ -70,7 +71,7 @@ const init=async ()=>{
                     await db.update({addr:uriList[i]},{$set: {dnumber:data.length }})
                 }
             }
-            await sleep("1s");
+            // await sleep("1s");
         }
         db.close()
     } catch (e) {
