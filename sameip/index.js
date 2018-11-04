@@ -60,7 +60,7 @@ const init=async ()=>{
     try {
         let date="2018-11-02"
         await db.connect();
-        let uriList=(await db.select({ftp:true,dnumber:{$exists:false},date:date})).map(item=>item.addr)
+        let uriList=(await db.select({ftp:true,dnumber:{$exists:false},date:date})).map(item=>item.addr).reverse()
         console.log(uriList.length)
         for(let i=0,len=uriList.length;i<len;i++){
             let data=await singleDomain(uriList[i])

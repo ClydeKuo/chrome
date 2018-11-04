@@ -11,4 +11,5 @@ npm-debug.log
 server/server.config.json
 lib/list.json
 sameip/source/
+sameip/data/
 *.png
