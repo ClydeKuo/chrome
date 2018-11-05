@@ -60,12 +60,12 @@ const init=async ()=>{
         let hostname=os.hostname();
         const hostList=["chrome","ftp","rdp","DESKTOP-19SQRJQ"]
         await db.connect();
-        let uriList=(await db.select({ftp:true,dnumber:{$exists:false},date:date})).map(item=>item.addr)
-        let len=uriList.length/4
-        console.log(`共有${len/4}条数据`)
-        let index=hostList.indexOf(hostname)*len
-        console.log(index)
-        for(let i=index;i<len+index;i++){
+        let res=(await db.select({ftp:true,dnumber:{$exists:false},date:date})).map(item=>item.addr)
+        let len=Math.ceil(res.length/4)
+        let index=hostList.indexOf(hostname)
+        let uriList=_.chunk(res,len)[index]
+        console.log(uriList.length)
+        for(let i=0,len2=uriList.length;i<len2;i++){
             let data=await singleDomain(uriList[i])
             if(data){
                 if(data.length){
