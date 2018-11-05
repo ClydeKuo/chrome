@@ -58,19 +58,14 @@ const init=async ()=>{
     try {
         let date="2018-11-05"
         let hostname=os.hostname();
-        console.log(hostname)
-        const obj={
-            chrome:{ssh:true,telnet:true},
-            ftp:{ssh:true,telnet:false},
-            rdp:{ssh:false,telnet:true},
-            "DESKTOP-19SQRJQ":{ssh:false,telnet:false}
-        }
-        let filter={ftp:true,dnumber:{$exists:false},date:date,...obj[hostname]}
-        console.log(filter)
+        const hostList=["chrome","ftp","rdp","DESKTOP-19SQRJQ"]
         await db.connect();
-        let uriList=(await db.select(filter)).map(item=>item.addr)
-        console.log(`共有${uriList.length}条数据`)
-        for(let i=0,len=uriList.length;i<len;i++){
+        let uriList=(await db.select({ftp:true,dnumber:{$exists:false},date:date})).map(item=>item.addr)
+        let len=uriList.length/4
+        console.log(`共有${len/4}条数据`)
+        let index=hostList.indexOf(hostname)*len
+        console.log(index)
+        for(let i=index;i<len+index;i++){
             let data=await singleDomain(uriList[i])
             if(data){
                 if(data.length){
