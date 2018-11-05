@@ -39,5 +39,14 @@ const rdp=async()=>{
         db.close()
     }
 }
+const getShell=(start,end)=>{
+    let str=""
+    for(let i=start;i<=end;i++){
+        str+=`nohup nmap -iL ${i}.txt -p 21,22,23,80,1433,3306,3389,27017  -oX xml/${i}.xml & \r\n`
+    }
+    console.log(str)
+    return str
+}
 // rdp()
-init()
+// init()
+getShell(111,136)

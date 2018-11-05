@@ -8,10 +8,8 @@ const _ = require('lodash');
 const DB=require("./db")
 
 let db = new DB();
-const platform=require('os').platform();
-console.log(platform)
-// nmap -iL 0.txt -p 21,22,23,1433,3306,3389,27017  -oX a.xml
-const splitStr=platform==="win32"?"\r\n":"\n"
+const os=require('os')
+
 const getUrl=async (domain,page=1,getNum=false)=>{
     try{
         let basicsUrl="https://dns.aizhan.com/"
@@ -58,10 +56,18 @@ const singleDomain=async (domain)=>{
 
 const init=async ()=>{
     try {
-        let date="2018-11-02"
+        let date="2018-11-05"
+        let hostname=os.hostname();
+        console.log(hostname)
+        const obj={
+            chrome:{ssh:true,telnet:false,rdp:false},
+            ftp:{ssh:false,telnet:true,rdp:false},
+            rdp:{ssh:false,telnet:false,rdp:true},
+        }
+        let filter=obj[hostname]
         await db.connect();
-        let uriList=(await db.select({ftp:true,dnumber:{$exists:false},date:date})).map(item=>item.addr).reverse()
-        console.log(uriList.length)
+        let uriList=(await db.select({ftp:true,dnumber:{$exists:false},date:date,...filter})).map(item=>item.addr)
+        console.log(`共有${uriList.length}条数据`)
         for(let i=0,len=uriList.length;i<len;i++){
             let data=await singleDomain(uriList[i])
             if(data){
