@@ -33,7 +33,7 @@ class DB{
   }
   selectPaging(params={},index){
     return new Promise((resolve,reject)=>{
-      this.collection.find(params).sort({"addr":1}).skip(index*10).limit(10).toArray((err, list)=>{
+      this.collection.find(params).sort({"addr":1}).skip(index*40).limit(10).toArray((err, list)=>{
         err?reject(err):resolve(list)
       });
     }) 

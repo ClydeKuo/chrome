@@ -53,19 +53,11 @@ const singleDomain=async (domain)=>{
         console.log(chalk.red(e));
     }
 }
-
-const surfing=async()=>{
-    try {
-        
-    } catch (e) {
-        throw e
-    }
-}
 const init=async ()=>{
     try {
         let date="2018-11-06"
         let hostname=os.hostname();
-        const hostList=["DESKTOP-19SQRJQ","chrome","ftp","rdp"]
+        const hostList=["ftp","DESKTOP-19SQRJQ","chrome","rdp"]
         let index=hostList.indexOf(hostname)
         await db.connect();
         let len=10

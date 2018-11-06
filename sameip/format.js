@@ -5,7 +5,7 @@ const chalk = require("chalk");
 const sleep = require("ko-sleep");
 const fs = require("fs");
 const DB = require("./db");
-
+const _ = require('lodash');
 let db = new DB();
 
 const parseString = file => {
@@ -53,7 +53,13 @@ const format = async () => {
           let res={ addr: item.addr }
           return res
         })
-        let repeatArr = (await db.select({$or: ipList})).map(item=>item.addr);
+        let repeatArr=[]
+          let tempArr=_.chunk(ipList,5000)
+          for (let n=0,tempArrLen=tempArr.length;n<tempArrLen;n++){
+            console.log(tempArr[n].length)
+            let chunkArr=(await db.select({$or: tempArr[n]})).map(item=>item.addr)
+            repeatArr=repeatArr.concat(chunkArr)
+          }
         let insertArr=arr2.filter(item=>{
           if(!repeatArr.includes(item.addr)){
             return item
