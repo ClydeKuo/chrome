@@ -10,7 +10,7 @@ const init=async ()=>{
     try {
         await db.connect();
         let domainList=[]
-        let date="2018-11-02"
+        let date="2018-11-05"
         let data=await db.select({dnumber:{$gt:0},date:date})
         console.log(data.length)
         data.forEach(item=>{
@@ -49,4 +49,4 @@ const getShell=(start,end)=>{
 }
 // rdp()
 // init()
-getShell(111,136)
+getShell(137,150)

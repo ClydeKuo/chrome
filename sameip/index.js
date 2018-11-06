@@ -54,29 +54,40 @@ const singleDomain=async (domain)=>{
     }
 }
 
+const surfing=async()=>{
+    try {
+        
+    } catch (e) {
+        throw e
+    }
+}
 const init=async ()=>{
     try {
         let date="2018-11-05"
         let hostname=os.hostname();
-        const hostList=["chrome","ftp","rdp","DESKTOP-19SQRJQ"]
-        await db.connect();
-        let res=(await db.select({ftp:true,dnumber:{$exists:false},date:date})).map(item=>item.addr)
-        let len=Math.ceil(res.length/4)
+        const hostList=["DESKTOP-19SQRJQ","chrome","ftp","rdp"]
         let index=hostList.indexOf(hostname)
-        let uriList=_.chunk(res,len)[index]
-        console.log(uriList.length)
-        for(let i=0,len2=uriList.length;i<len2;i++){
-            let data=await singleDomain(uriList[i])
-            if(data){
-                if(data.length){
-                    await db.update({addr:uriList[i]},{$set: { domains: data,dnumber:data.length }})
-                }else{
-                    await db.update({addr:uriList[i]},{$set: {dnumber:data.length }})
+        await db.connect();
+        let len=10
+        do{
+            let uriList=(await db.selectPaging({ftp:true,dnumber:{$exists:false},date:date},index)).map(item=>item.addr)
+            len=uriList.length
+            console.log(len)
+            for(let i=0;i<len;i++){
+                let data=await singleDomain(uriList[i])
+                if(data){
+                    if(data.length){
+                        await db.update({addr:uriList[i]},{$set: { domains: data,dnumber:data.length }})
+                    }else{
+                        await db.update({addr:uriList[i]},{$set: {dnumber:data.length }})
+                    }
                 }
+                await sleep("1s");
             }
-            await sleep("1s");
+        }while(len>=10){
+            console.log("完成")
+            db.close()
         }
-        db.close()
     } catch (e) {
         console.log(chalk.red(e));
         db.close()
