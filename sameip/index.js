@@ -63,7 +63,7 @@ const surfing=async()=>{
 }
 const init=async ()=>{
     try {
-        let date="2018-11-05"
+        let date="2018-11-06"
         let hostname=os.hostname();
         const hostList=["DESKTOP-19SQRJQ","chrome","ftp","rdp"]
         let index=hostList.indexOf(hostname)
