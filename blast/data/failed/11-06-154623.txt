@@ -1,0 +1,9 @@
+cxc100.com,cxc100,cxc100
+www.yidu.com.cn,yidu,yidu
+yidu.com.cn,yidu,yidu
+www.shensuanwang.cn,shensuanwang,shensuanwang
+www.evercamel.com,evercamel,evercamel
+blog.itai.com.tw,itai,itai
+www.tyapmc.com.tw,tyapmc,tyapmc
+www.richn.com.tw,richn,richn
+www.topcolor.com.tw,topcolor,topcolor

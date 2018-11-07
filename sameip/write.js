@@ -28,8 +28,8 @@ const init=async ()=>{
 const rdp=async()=>{
     try {
         await db.connect();
-        let date="2018-10-31"
-        let data=await db.select({dnumber:{$gt:10},date:date,rdp:true})
+        let date="2018-11-06"
+        let data=await db.select({dnumber:{$gt:10},rdp:true})
         console.log(data.length)
         let res=data.map(item=>item.addr)
         fs.writeFileSync(`${__dirname}/data/rdp-${date}.txt`,res.join(splitStr))
@@ -47,6 +47,6 @@ const getShell=(start,end)=>{
     console.log(str)
     return str
 }
-// rdp()
+rdp()
 // init()
-getShell(137,150)
+// getShell(137,150)
