@@ -10,7 +10,7 @@ const init=async ()=>{
     try {
         await db.connect();
         let domainList=[]
-        let date="2018-11-05"
+        let date="2018-11-06"
         let data=await db.select({dnumber:{$gt:0},date:date})
         console.log(data.length)
         data.forEach(item=>{
