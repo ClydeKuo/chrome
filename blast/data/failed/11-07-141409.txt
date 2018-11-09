@@ -5,14 +5,9 @@ intra2.officepro.com.tw,officepro,officepro
 intra4.officepro.com.tw,officepro,officepro
 www.acbel.com,acbel,acbel
 www.dogcp.com,dogcp,dogcp
-inleeo.com,inleeo,inleeo
-www.gdronghuida.com,gdronghuida.com,gdronghuida.com
-www.qili2598.com,qili2598,qili2598
-btb.darrenzzy.cn,darrenzzy,darrenzzy
 www.j5233.com,j5233,j5233
 www.join2.com.tw,join2,join2
 holos.com.tw,holos,holos
-www.thincom.com.tw,thincom,thincom
 211.73.64.9,64,64
 free.nchc.org.tw,nchc,nchc
 tw.archive.ubuntu.com,ubuntu,ubuntu

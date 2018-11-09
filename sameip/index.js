@@ -55,9 +55,9 @@ const singleDomain=async (domain)=>{
 }
 const init=async ()=>{
     try {
-        let date="2018-11-06"
+        let date="2018-11-09"
         let hostname=os.hostname();
-        const hostList=["ftp","DESKTOP-19SQRJQ","chrome","rdp"]
+        const hostList=["DESKTOP-19SQRJQ","chrome","rdp","ftp",]
         let index=hostList.indexOf(hostname)
         await db.connect();
         let len=10
