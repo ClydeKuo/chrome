@@ -55,7 +55,7 @@ const singleDomain=async (domain)=>{
 }
 const init=async ()=>{
     try {
-        let date="2018-11-09"
+        let date="2018-11-12"
         let hostname=os.hostname();
         const hostList=["DESKTOP-19SQRJQ","chrome","rdp","ftp",]
         let index=hostList.indexOf(hostname)

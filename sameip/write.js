@@ -49,4 +49,4 @@ const getShell=(start,end)=>{
 }
 // rdp()
 // init()
-getShell(189,200)
+getShell(246,260)
