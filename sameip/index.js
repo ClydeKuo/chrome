@@ -62,7 +62,8 @@ const init=async ()=>{
         await db.connect();
         let len=10
         do{
-            let uriList=(await db.selectPaging({ftp:true,dnumber:{$exists:false},date:date},index)).map(item=>item.addr)
+            let uriList=(await db.selectPaging({ftp:true,dnumber:{$exists:false}},index)).map(item=>item.addr)
+            // let uriList=(await db.selectPaging({ftp:true,dnumber:{$exists:false},date:date},index)).map(item=>item.addr)
             len=uriList.length
             console.log(len)
             for(let i=0;i<len;i++){
