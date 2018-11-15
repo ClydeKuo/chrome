@@ -54,7 +54,7 @@ const format = async () => {
           return res
         })
         let repeatArr=[]
-          let tempArr=_.chunk(ipList,5000)
+          let tempArr=_.chunk(ipList,2000)
           for (let n=0,tempArrLen=tempArr.length;n<tempArrLen;n++){
             console.log(tempArr[n].length)
             let chunkArr=(await db.select({$or: tempArr[n]})).map(item=>item.addr)
