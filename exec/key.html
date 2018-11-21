@@ -16,9 +16,18 @@
     <p id="key2"></p>
 
 </body>
+<script src="./moment.js"></script>
 <script src="./authcode.js"></script>
 <script>
-    document.getElementById("key").innerText=authcode.encode('guest','$gTnrsdvqVWg0N@YxRcq1r3C!950L6llMBbDHh7s!25dlmzl@V1ct49PMuY#myW5A3eK',300)
-    document.getElementById("key2").innerText=authcode.encode('guest','$gTnrsdvqVWg0N@YxRcq1r3C!950L6llMBbDHh7s!25dlmzl@V1ct49PMuY#myW5A3eK',600)
+    var time=moment().format("YYYY-MM-DD h:mm:ss")
+    console.log(time)
+    var key=""
+    do{
+        key=authcode.encode(JSON.stringify({user:"guest",time:time}),'$gTnrsdvqVWg0N@YxRcq1r3C!950L6llMBbDHh7s!25dlmzl@V1ct49PMuY#myW5A3eK',300)
+    }while(!(/^\w+$/.test(key))){
+        document.getElementById("key").innerText=key
+    }
+    document.getElementById("key2").innerText=authcode.decode("7631W2Oy2PmAwWcAzoavhpzHmtejpyx2KbM5wcUPlGWwmn5GJayWJLEcBwe74FsRD4iCjJjadXUqVKg0Sxq6SgY4SBOUY24pIKk",'$gTnrsdvqVWg0N@YxRcq1r3C!950L6llMBbDHh7s!25dlmzl@V1ct49PMuY#myW5A3eK')
+    console.log(moment().diff("2018-11-21 11:24:51","hour"))
 </script>
 </html>
