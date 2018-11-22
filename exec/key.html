@@ -23,7 +23,7 @@
     console.log(time)
     var key=""
     do{
-        key=authcode.encode(JSON.stringify({user:"guest",time:time}),'$gTnrsdvqVWg0N@YxRcq1r3C!950L6llMBbDHh7s!25dlmzl@V1ct49PMuY#myW5A3eK',300)
+        key=authcode.encode(JSON.stringify({user:"guest",time:time}),'$gTnrsdvqVWg0N@YxRcq1r3C!950L6llMBbDHh7s!25dlmzl@V1ct49PMuY#myW5A3eK',6000)
     }while(!(/^\w+$/.test(key))){
         document.getElementById("key").innerText=key
     }
