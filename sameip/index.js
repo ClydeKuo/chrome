@@ -75,7 +75,7 @@ const init=async ()=>{
                         await db.update({addr:uriList[i]},{$set: {dnumber:data.length }})
                     }
                 }
-                await sleep("5s");
+                await sleep("1s");
             }
         }while(len>=10){
             console.log("完成")
