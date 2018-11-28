@@ -15,7 +15,8 @@
     "uniq": "node sameip/uniq.js",
     "format": "node --max_old_space_size=4096 sameip/format.js",
     "baidu": "node baidu/index.js",
-    "write": "node sameip/write.js"
+    "write": "node sameip/write.js",
+    "googleapi": "node googleapi/index.js"
   },
   "dependencies": {
     "chalk": "^2.4.1",
