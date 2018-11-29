@@ -65,7 +65,7 @@ proxy.on("proxyRes", async function(proxyRes, req, res, options) {
         const $ = cheerio.load(body)
         // console.log($('a[href|="/income/expense.action"]').text())
         $('a[href|="/income/expense.action"]').text(-infoList[currentUser].totalout)
-        $('a[href|="/shop/index.action"]').eq(1).text(-infoList[currentUser].residue)
+        $('a[href|="/shop/index.action"]').eq(1).text(infoList[currentUser].residue)
         res.write($.html())
         res.end();
     });
