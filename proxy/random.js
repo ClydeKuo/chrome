@@ -62,14 +62,18 @@ const fake=user=>{
 const init = async () => {
     try {
       await db.connect();
-      await db.remove({user:"15135459599"})
-      data=fake("15135459599")
-      console.log(data.length)
+    //   await db.remove({user:"15135459599"})
+    let users=["15135153038","15235821033","15364968999","16603589423","17725507733","18334893763","18538217587"]
+    for(let j=0,len=users.length;j<len;j++){
+        let data=fake(users[j])
+        console.log(data.length)
+        await db.insert(data)
+    }
+      
       /* let chunk=_.chunk(data, 10);
       for(let i=0,len=chunk.length;i<len;i++){
         await db.insert(chunk[i])
       } */
-      await db.insert(data)
       db.close();
     } catch (e) {
       console.log(chalk.red(e));

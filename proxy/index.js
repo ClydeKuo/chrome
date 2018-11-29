@@ -64,8 +64,8 @@ proxy.on("proxyRes", async function(proxyRes, req, res, options) {
         body = body.toString();
         const $ = cheerio.load(body)
         // console.log($('a[href|="/income/expense.action"]').text())
-        $('a[href|="/income/expense.action"]').text(Math.floor(Math.random()*10000)*1000)
-        $('a[href|="/shop/index.action"]').eq(1).text(Math.floor(Math.random()*100)*1000)
+        $('a[href|="/income/expense.action"]').text(infoList[currentUser].total)
+        $('a[href|="/shop/index.action"]').eq(1).text(-infoList[currentUser].residue)
         res.write($.html())
         res.end("123");
     });
@@ -102,12 +102,10 @@ const getFulldata=async ()=>{
     }
     //总数目
     tempInfo[users[i]].total=_.sumBy(data.filter(item=>(item.type==="in"&&item.user===users[i])),o=>o.consumeIntegrateNum) 
-    let oo=_.sumBy(tempInfo[users[i]].in["201807"],o=>o.consumeIntegrateNum) 
     //剩余
     tempInfo[users[i]].residue=_.sumBy(data.filter(item=>(item.user===users[i])),o=>o.consumeIntegrateNum)
-    console.log(tempInfo[users[i]].total)
-    console.log(tempInfo[users[i]].residue)
-    console.log(oo)
+    /* console.log(tempInfo[users[i]].total)
+    console.log(tempInfo[users[i]].residue) */
   }
   infoList=tempInfo
 }
@@ -121,6 +119,7 @@ const init=async ()=>{
       if(name){
         let user=name.split("=")[1]
         currentUser=user
+        console.log(user)
       }
     }
     var pathname = url.parse(request.url).pathname;
