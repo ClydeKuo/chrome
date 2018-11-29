@@ -33,7 +33,7 @@ class DB{
   }
   selectList(params={},index){
     return new Promise((resolve,reject)=>{
-      this.collection.find(params,{month:0,type:0,user:0}).sort({"dateTime":-1}).toArray((err, list)=>{
+      this.collection.find(params).sort({"dateTime":-1}).toArray((err, list)=>{
         err?reject(err):resolve(list)
       });
     }) 
