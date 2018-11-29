@@ -64,17 +64,19 @@ proxy.on("proxyRes", async function(proxyRes, req, res, options) {
         body = body.toString();
         const $ = cheerio.load(body)
         // console.log($('a[href|="/income/expense.action"]').text())
-        $('a[href|="/income/expense.action"]').text(infoList[currentUser].total)
+        $('a[href|="/income/expense.action"]').text(-infoList[currentUser].totalout)
         $('a[href|="/shop/index.action"]').eq(1).text(-infoList[currentUser].residue)
         res.write($.html())
-        res.end("123");
+        res.end();
     });
   }
   
 });
 // 将数据格式化
 const getFulldata=async ()=>{
-  let users=['15135459599']
+  let users=["15135459599","15135153038","15235821033","15364968999","16603589423","17725507733","18334893763","18538217587"]
+  // let users=["15135459599"]
+  
   let tempInfo={}
   let filter={ymd:{$lt:moment().subtract(1, "days").format("YYYY/MM/DD")}}
   let data=await db.selectList(filter)
@@ -90,7 +92,7 @@ const getFulldata=async ()=>{
       tempInfo[users[i]].in[fmonth]=[]
       tempInfo[users[i]].out[fmonth]=[]
       data.forEach(item=>{
-        if(item.month===fmonth){
+        if(item.month===fmonth&&users[i]===item.user){
           tempInfo[users[i]].all[fmonth].push(item)
           if(item.type==="in"){
             tempInfo[users[i]].in[fmonth].push(item)
@@ -101,13 +103,14 @@ const getFulldata=async ()=>{
       })
     }
     //总数目
-    tempInfo[users[i]].total=_.sumBy(data.filter(item=>(item.type==="in"&&item.user===users[i])),o=>o.consumeIntegrateNum) 
+    tempInfo[users[i]].totalout=_.sumBy(data.filter(item=>(item.type==="out"&&item.user===users[i])),o=>o.consumeIntegrateNum) 
     //剩余
     tempInfo[users[i]].residue=_.sumBy(data.filter(item=>(item.user===users[i])),o=>o.consumeIntegrateNum)
     /* console.log(tempInfo[users[i]].total)
     console.log(tempInfo[users[i]].residue) */
   }
   infoList=tempInfo
+  // fs.writeFileSync(`./test.txt`,JSON.stringify(infoList["15135459599"].out))
 }
 const init=async ()=>{
   await db.connect();
@@ -119,7 +122,7 @@ const init=async ()=>{
       if(name){
         let user=name.split("=")[1]
         currentUser=user
-        console.log(user)
+        // console.log(user)
       }
     }
     var pathname = url.parse(request.url).pathname;

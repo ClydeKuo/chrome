@@ -39,7 +39,7 @@ const fake=user=>{
         })
         }
         let date=Math.floor(Math.random()*18)+10
-        let tempconsumeIntegrate=Math.floor(Math.random()*100+100)*1000
+        let tempconsumeIntegrate=Math.floor(Math.random()*100+50)*1000
         dataList.push({
             dateTime:`${moment(`2018-${month}-${date} 14:${Math.floor(Math.random()*50+10)}`).format("YYYY/MM/DD HH:mm")}`,
             userProperty:"技术员",
@@ -63,10 +63,12 @@ const init = async () => {
     try {
       await db.connect();
     //   await db.remove({user:"15135459599"})
-    let users=["15135153038","15235821033","15364968999","16603589423","17725507733","18334893763","18538217587"]
+    let users=["15135459599","15135153038","15235821033","15364968999","16603589423","17725507733","18334893763","18538217587"]
+    for(let j=0,len=users.length;j<len;j++){
+        await db.remove({user:users[j]})
+    }
     for(let j=0,len=users.length;j<len;j++){
         let data=fake(users[j])
-        console.log(data.length)
         await db.insert(data)
     }
       
