@@ -72,6 +72,14 @@ proxy.on("proxyRes", async function(proxyRes, req, res, options) {
   }
   
 });
+const limit=num=>{
+  if(num>30000){
+    num=Math.floor(num/200)*100
+    return limit(num)
+  }else{
+    return num
+  }
+}
 // 将数据格式化
 const getFulldata=async ()=>{
   let users=["15135459599","15135153038","15235821033","15364968999","16603589423","17725507733","18334893763","18538217587"]
@@ -105,13 +113,14 @@ const getFulldata=async ()=>{
     //总数目
     tempInfo[users[i]].totalout=_.sumBy(data.filter(item=>(item.type==="out"&&item.user===users[i])),o=>o.consumeIntegrateNum) 
     //剩余
-    tempInfo[users[i]].residue=_.sumBy(data.filter(item=>(item.user===users[i])),o=>o.consumeIntegrateNum)
+    tempInfo[users[i]].residue=limit(_.sumBy(data.filter(item=>(item.user===users[i])),o=>o.consumeIntegrateNum))
     /* console.log(tempInfo[users[i]].total)
     console.log(tempInfo[users[i]].residue) */
   }
   infoList=tempInfo
   // fs.writeFileSync(`./test.txt`,JSON.stringify(infoList["15135459599"].out))
 }
+
 const init=async ()=>{
   await db.connect();
   await getFulldata()
