@@ -16,7 +16,8 @@
     "format": "node --max_old_space_size=4096 sameip/format.js",
     "baidu": "node baidu/index.js",
     "write": "node sameip/write.js",
-    "proxy": "node proxy/index.js"
+    "proxy": "node proxy/index.js",
+    "dbug": "node dbug/index.js"
   },
   "dependencies": {
     "chalk": "^2.4.1",
