@@ -5,18 +5,18 @@ let urls=["http://www.dbug.ga/what-makes-webassembly-fast/97.html","http://www.d
 
 
 const init=async ()=>{
+    const browser = await puppeteer.launch(
+        {args: [
+            `--proxy-server=SOCKS5://45.77.15.106:9150`,
+            `--user-agent=${agent()}`,
+            '--no-sandbox',
+            '--disable-setuid-sandbox' 
+          ],
+          timeout:60000,
+        //   headless: false,
+        }
+      );
     try {
-        const browser = await puppeteer.launch(
-            {args: [
-                `--proxy-server=SOCKS5://45.77.15.106:9150`,
-                `--user-agent=${agent()}`,
-                '--no-sandbox',
-                '--disable-setuid-sandbox' 
-              ],
-              timeout:60000,
-            //   headless: false,
-            }
-          );
           const page = await browser.newPage();
           for(let i=0,len=urls.length;i<len;i++){
             await page.goto(urls[i],{
@@ -28,7 +28,6 @@ const init=async ()=>{
     } catch (e) {
         console.log(e)
     }finally{
-        
         browser.close();
     }
 }
