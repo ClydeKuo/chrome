@@ -14,7 +14,8 @@ const init=async ()=>{
                 '--disable-setuid-sandbox' 
               ],
               timeout:60000,
-              headless: false,}
+            //   headless: false,
+            }
           );
           const page = await browser.newPage();
           for(let i=0,len=urls.length;i<len;i++){
@@ -26,13 +27,13 @@ const init=async ()=>{
           }
     } catch (e) {
         console.log(e)
+    }finally{
+        
         browser.close();
     }
 }
 (async() => {
   do {
-    console.log(11111)
       await init()
-      
   } while (true);
 })();
